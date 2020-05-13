@@ -1,0 +1,28 @@
+body {
+    padding: 0;
+    margin :0;
+    /*background-color : black;*/
+}
+
+/* Mettre tous les textes en blanc vu que fond noir */
+/*h1, p,
+.ready, .connected
+.totalA, .totalB {
+    color : white;
+}/*
+
+
+
+/* -------------------- VIDÉOS -------------------- */
+
+
+.video-player{
+    padding :0;
+    margin : 0;
+    display : block;
+    position: absolute;
+    top:0;
+    left:0;
+    width : 100vw;
+    height : 100vh;
+}
