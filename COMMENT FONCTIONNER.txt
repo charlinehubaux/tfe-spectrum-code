@@ -1,4 +1,4 @@
-
+﻿
 ----- WINDOWS -----
 
 1. télécharger node.js (logiciel)
@@ -14,3 +14,16 @@
 
 
 ----- MAC -----
+
+
+
+
+
+
+
+
+
+
+---------- Pour avoir les bonnes vidéos (MàJ) ----------
+Aller les chercher ici : https://drive.google.com/drive/folders/1XQMJ69z-iQq2A27msBCGdAraW8pMYKAc?usp=sharing
+Les placer dans src/videos
