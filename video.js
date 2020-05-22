@@ -5,21 +5,30 @@ $(function() {
 
     // Variables d'elements HTML
     var $bienvenue = $(".bienvenue");
+    var $generique = $(".generique");
     const $troncPlayer = $(".tronc-player");
     const $troncSource = $("#tronc-video-source");
+    const $timerPlayer = $(".timer-player");
+    const $timerSource = $("#timer-video-source");
     const $choixPlayer = $(".choix-player");
     const $choixSource = $("#choix-video-source");
 
     // Cache les lecteurs vidéos au début
+    $generique.hide();
     $troncPlayer.hide();
+    $timerPlayer.hide();
     $choixPlayer.hide();
+    $timerPlayer.css( "zIndex", 1);
+    $troncPlayer.css( "zIndex", 2 );
+    $choixPlayer.css( "zIndex", 3 );
 
     // Tableau de toutes les vidéos à lancer, triées
     var videos = [
         ["src/videos/T1.mp4" ,  "src/videos/T2.mp4",    "src/videos/T3.mp4"],
         ["src/videos/A1.mp4",   "src/videos/A2.mp4"],
         ["src/videos/B1A1.mp4", "src/videos/B1A2.mp4",  "src/videos/B2A1.mp4",  "src/videos/B2A2.mp4"],
-        ["src/videos/F1.mp4",   "src/videos/F2.mp4",    "src/videos/F3.mp4"]
+        ["src/videos/F1.mp4",   "src/videos/F2.mp4",    "src/videos/F3.mp4"],
+        ["src/videos/timer.mp4", "src/videos/timer.mp4", "src/videos/timer.mp4"]
     ]; 
 
     // Choix par défauts (si égalité ou si aucun vote)
@@ -28,15 +37,25 @@ $(function() {
 
     socket.emit('admin');
 
-
+function final()
+{
+    $troncPlayer.hide();
+    $timerPlayer.hide();
+    $choixPlayer.hide();
+    $generique.show();
+}
 
     // La toute première fois, on lance la vidéo T1
     socket.on('start', (data) => {
         $bienvenue.hide();
-        $troncPlayer.show();
+        $timerPlayer.show();
+        $troncPlayer.show(); 
         $troncSource.attr("src", videos[0][0]);
         $troncPlayer.on('ended',onTroncEnded);
         $troncPlayer.load();
+        $timerSource.attr("src", videos[4][0]);
+        $timerPlayer.on('ended',onTimerEnded);
+        $timerPlayer.load();
         $troncPlayer.trigger('play');
     });
     
@@ -44,20 +63,25 @@ $(function() {
     // Fonction pour lire les vidéos choix suivies des vidéos troncs communs
     function launchVideo(src){
 
+
         // Change l'attribut src par la bonne source
         $choixSource.attr("src", src);
         $choixPlayer.on('ended',onVideoEnded);
 
         // On charge, montre et lance la vidéo
-        $choixPlayer.load();
+        $choixPlayer.css( "zIndex", 0 );
         $choixPlayer.show();
-        $choixPlayer.trigger('play');
+        $choixPlayer.load();
 
+
+        if(question < 2){
         setTimeout(function(){
+            $troncPlayer.css( "zIndex", -1 );
+            $troncPlayer.show();
             $troncSource.attr("src", videos[0][question+1]);
             $troncPlayer.on('ended',onTroncEnded);
             $troncPlayer.load();
-        },1000);
+        },2500);}
     }
 
 
@@ -65,8 +89,24 @@ $(function() {
     function onVideoEnded() {
         $choixPlayer.unbind('ended');
         $choixPlayer.hide();
-        $troncPlayer.trigger('play');
+        
+        if(question < 2){
+            $troncPlayer.trigger('play');
+            $troncPlayer.css( "zIndex", 2 );
+
+            setTimeout(function(){
+                $timerSource.attr("src", videos[4][0]);
+                $timerPlayer.on('ended',onTimerEnded);
+                $timerPlayer.show();
+                $timerPlayer.load();
+            },1000);
+
+        } else final();
+
+        
     }
+    
+
 
     // Quand le tronc finit, on l'envoie au serveur
     function onTroncEnded(){
@@ -74,7 +114,21 @@ $(function() {
         // Va chercher question d'après
         question++;
         socket.emit("video-is-finished", question);
+
+        $timerPlayer.trigger('play');
+
+        $troncPlayer.hide();
+ 
     }
+
+    // Quand le timer finit, on l'envoie au serveur
+    function onTimerEnded(){
+        $timerPlayer.unbind('ended');
+        $choixPlayer.trigger('play');
+        $timerPlayer.hide();
+        $choixPlayer.css( "zIndex", 2 );
+    }
+    
 
 
     // Va chercher le plus au % à un choix pour le lancer

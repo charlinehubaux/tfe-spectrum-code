@@ -54,6 +54,7 @@ io.on('connection', (socket) => {
   });
 
   
+
   // Check si la personne se déconnecte
   socket.on('disconnect', () => { 
     //console.log(Sadmin);
@@ -79,7 +80,6 @@ io.on('connection', (socket) => {
 
   // Ce qu'il fait quand le temps est fini
   const timeIsFinished = (data) => {
-    console.log("yo, Fini de voter");
     socket.broadcast.emit('timeup');
     socket.emit('timeup');
     choix = [0,0];
@@ -89,7 +89,7 @@ io.on('connection', (socket) => {
   // Check fin de video
   socket.on('video-is-finished', (question)=>{
     socket.broadcast.emit('video-is-finished', question);
-    setTimeout(timeIsFinished, 11000);
+    setTimeout(timeIsFinished, 13000);
   });
 
 

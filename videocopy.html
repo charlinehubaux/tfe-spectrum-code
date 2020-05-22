@@ -11,24 +11,39 @@
   <h1 class='bienvenue'>BIENVENUE</h1>
 
   <video class="video-player timer-player">
-    <source id="timer-video-source" src="" type="video/mp4"/>
+    <source id="timer-video-source" src="src/videos/timer.mp4" type="video/mp4"/>
   </video>
 
   <video class ="video-player tronc-player">
-    <source id="tronc-video-source" src="" type="video/mp4"/>
+    <source id="tronc-video-source" src="src/videos/T1.mp4" type="video/mp4"/>
   </video>
 
   <video class="video-player choix-player">
-    <source id="choix-video-source" src="" type="video/mp4"/>
+    <source id="choix-video-source" src="src/videos/A1.mp4" type="video/mp4"/>
   </video>
 
-  <h1 class='generique'>GENERIQUE DE FIN</h1>
-  
+  <style>
+    .choix-player
+    {
+      z-index : 0;
+    }
+
+    .tronc-player
+    {
+      z-index : 1;
+    }
+
+    .timer-player
+    {
+z-index : 2;
+    } 
+
+  </style>
 
 
   <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
   <script src="/socket.io/socket.io.js"></script>
-  <script src="/video.js"></script>
+
   
 </body>
 </html>

@@ -12,6 +12,11 @@ $(function() {
     var $question = $(".question");
     var $totalA = $(".totalA");
     var $totalB = $(".totalB");
+    var $timerTxt = $('.timer');
+    var $waiting = $('.waiting');
+
+    var timer;
+    var time = 12;
 
     var nbrReady = 0;
 
@@ -32,6 +37,9 @@ $(function() {
     $buttonA.hide();
     $buttonB.hide();
     $question.hide();
+    $waiting.hide();
+    $totalA.hide();
+    $totalB.hide();
     
     
 
@@ -40,7 +48,7 @@ $(function() {
         // On emit ('le nom de la fonction ON', 'les datas à utiliser')
         socket.emit('ready', "READY !");
         $buttonReady.hide();
-        $iAmReady.show();
+        $waiting.show();
     });
 
     
@@ -53,24 +61,47 @@ $(function() {
         nbrReady++;
         console.log(nbrReady);
     });
+
+    function updateTimer(){
+
+       if(time>0) {
+            time --;
+            $timerTxt.html(time);
+        }
+            
+        else {
+            clearInterval(timer);
+            time = 12;
+        }
+
+    }
   
     // Afficher les boutons en fin de vidéo
     socket.on('video-is-finished', (data) => {
         nbrQuestion = data;
-        $iAmReady.hide();
+        $waiting.hide();
         $buttonA.show();
         $buttonB.show();
         $buttonA.html(questions[nbrQuestion].txt_choixA);
         $buttonB.html(questions[nbrQuestion].txt_choixB);
         $question.show();
+
+        $timerTxt.html(time);
+        $timerTxt.show();
+        timer = setInterval(updateTimer, 1000);
     });
 
     // Quand tu click sur un bouton, il efface les boutons
     function quandTuVotes(){
         $buttonA.hide();
         $buttonB.hide();
+        $totalA.show();
+        $totalB.show();
+        $timerTxt.hide();
+        $question.hide();
     }
 
+    
     // Si tu clique sur le choix A
     $buttonA.click(() => {
         socket.emit('choix', 0);
@@ -91,6 +122,8 @@ $(function() {
         console.log('choix A : ' + choixA);
         console.log('choix B : ' + choixB);
 
+
+
         $totalA.html('choix A : ' + Math.round(choixA) + "%");
         $totalB.html('choix B : ' + Math.round(choixB) + "%");
     });
@@ -99,11 +132,14 @@ $(function() {
     // Quand time is over, on retire TOUT
     socket.on('timeup', () =>{
         console.log("Le temps est écoulé");
+        $timerTxt.hide();
+        $waiting.show();
         $buttonA.hide();
         $buttonB.hide();
         $question.hide();
         $totalA.hide();
         $totalB.hide();
+
     });
 
 
