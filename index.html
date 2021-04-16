@@ -4,29 +4,61 @@
   <meta charset="UTF-8">
   <title>MOBILE</title>
   <link rel="stylesheet" href="main.css">
+  <link href="https://fonts.googleapis.com/css2?family=Pangolin&display=swap" rel="stylesheet"> 
 
  
 </head>
 <body>
 
-<button class="buttonReady">READY !</button>
+<div id="app" class="timerRond"></div>
+
+<div class="home-mobile-content">
+    <h1 class="titre">SPECTRUM</h1>
+    <button class="buttonReady">I am ready</button>
+</div>
+
 <div class="messages"></div>
 
-<p class="timer"></p>
+<div class="connected"></div>
+  
 
-<p class='question'>Que vas-tu faire ?</p>
-<button class="buttonA">Choix A</button>
-<button class="buttonB">Choix B</button>
-<div class="totalA"></div>
-<div class="totalB"></div>
+<div class="page-choix-content"> 
+  
+  <ul class="grid  grid-2cols">
 
-<h1 class="waiting">WAITING</h1>
+        <li>
+            <div class="choix-pourcentage-1">
+              <button class="buttonA">Choix A</button>
+              <div class="totalA"></div>   
+            </div>
+        </li>
 
+        <li>
+            <div class="choix-pourcentage-2">
+            <button class="buttonB">Choix B</button>
+            <div class="totalB"></div>
+            </div>
+        </li>
+
+    </ul>
+
+</div> 
+  
+
+
+<div class="waiting">
+  <div class="bg"></div>
+  <div class="loader">
+    <span class="loader__inner"></span>
+    <span class="loader__inner"></span>
+  </div>
+</div>
 
 
   <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
   <script src="/socket.io/socket.io.js"></script>
   <script src="/mobile.js"></script>
+  
   
 </body>
 </html>

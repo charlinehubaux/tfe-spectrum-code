@@ -7,7 +7,7 @@ var app = express();
 var path = require('path');
 var server = require('http').createServer(app);
 var io = require('socket.io')(server);
-var port = process.env.PORT || 8080;
+var port = process.env.PORT || 3000;
 
 server.listen(port,"0.0.0.0");
 
@@ -51,6 +51,7 @@ io.on('connection', (socket) => {
     // entre crochets, création d'objets,.. tu peux envoyer pleins de données différentes, dans un même "message"
     pushed = true;
     socket.broadcast.emit('sendReady',nbrReady);
+    socket.emit('sendReady',nbrReady);
   });
 
   
@@ -58,7 +59,7 @@ io.on('connection', (socket) => {
   // Check si la personne se déconnecte
   socket.on('disconnect', () => { 
     //console.log(Sadmin);
-    if(!Sadmin){
+    if(!Sadmin){ 
       nbrConnected--;
       if(pushed){
         nbrReady--;
@@ -89,7 +90,7 @@ io.on('connection', (socket) => {
   // Check fin de video
   socket.on('video-is-finished', (question)=>{
     socket.broadcast.emit('video-is-finished', question);
-    setTimeout(timeIsFinished, 13000);
+    setTimeout(timeIsFinished, 20000);
   });
 
 
