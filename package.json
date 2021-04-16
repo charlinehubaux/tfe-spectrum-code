@@ -1,7 +1,7 @@
 {
-  "name": "socket.io-chat",
+  "name": "tfe-spectrum-code",
   "version": "0.0.0",
-  "description": "A simple chat client using socket.io",
+  "description": "",
   "main": "src/index.js",
   "author": "Grant Timmerman",
   "private": true,
@@ -15,5 +15,11 @@
   },
   "devDependencies": {
     "nodemon": "^2.0.3"
+  },
+  "keywords": [],
+  "nodemonConfig": {
+    "ignore": [
+      "public/*"
+    ]
   }
 }
