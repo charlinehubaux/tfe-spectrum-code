@@ -8,7 +8,8 @@ socket.onAny((event, ...args) => {
 function showUsernamePicker() {
   console.log("showUsername");
   const container = document.querySelector("#js-container");
-  container.html = "select username";
+  console.log(container);
+  container.innerHTML = "select username";
 }
 
 function init() {
@@ -21,6 +22,7 @@ function init() {
     console.log("je suis connecté");
     localStorage.removeItem("sessionID");
     usernameAlreadySelected = true;
+    // socket.auth, c'est les données échangée lors de la poignée de main initiale
     socket.auth = { sessionID };
     socket.connect();
   } else {
@@ -58,6 +60,7 @@ function init() {
   socket.on("disconnect", () => {
     connected = false;
   });
+  // Ici qu'on dit "pas rentrer" avec poignée de main
   socket.on("connect_error", (err) => {
     if (err.message === "invalid username") {
       usernameAlreadySelected = false;

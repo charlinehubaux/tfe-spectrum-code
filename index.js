@@ -27,6 +27,7 @@ io.use(async (socket, next) => {
   if (!socket.handshake.auth) {
     return next(new Error("invalid handshake"));
   }
+  // Donnée passées en ligne 25 dans test.js
   const sessionID = socket.handshake.auth.sessionID;
   if (sessionID) {
     console.log("sessionID", sessionID);
