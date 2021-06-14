@@ -1,122 +1,139 @@
 // ---------- ICI C'EST CE QUI SE PASSE AU NIVEAU DU SERVEUR ----------
 
-// Setup basic express server
+// Immport packages and setup some boilerplate
 require('dotenv').config();
-var express = require("express");
-var app = express();
-var path = require("path");
-var server = require("http").createServer(app);
-var io = require("socket.io")(server, {cors: {
-  origin: "*",
-  methods: "GET,HEAD,PUT,PATCH,POST,DELETE"}});
-var port = process.env.PORT || 3000;
-var sessionStore = require("./server/sessionStore");
-var cors = require('cors');
+const express = require("express");
+const cors = require('cors');
+const path = require("path");
+const crypto = require("crypto");
+//Create the express server
+const app = express();
+const server = require("http").createServer(app);
+//Create the socket io server by passing a reference to the httpServer
+const io = require("socket.io")(server, {
+    cors: {
+        origin: "*",
+        methods: "GET,HEAD,PUT,PATCH,POST,DELETE"
+    }
+});
+const port = process.env.PORT || 5000;
+const MemorySessionStore = require("./server/MemorySessionStore");
+const sessionStore = new MemorySessionStore();
+//Allow request from other domains
 app.use(cors());
 
-const crypto = require("crypto");
+
 const randomId = () => crypto.randomBytes(8).toString("hex");
 
-server.listen(port, "0.0.0.0");
+server.listen(port);
 
 // Routing
 app.use(express.static(path.join(__dirname, "public")));
 
 // Instanciation des variables
-var nbrConnected = 0;
-var nbrReady = 0;
-var choix = [0, 0];
+const nbrConnected = 0;
+const nbrReady = 0;
+const choix = [0, 0];
 
 // Observe si déjà une session avec ce use
 io.use(async (socket, next) => {
-  if (!socket.handshake.auth) {
-    return next(new Error("invalid handshake"));
-  }
-  // Donnée passées en ligne 25 dans test.js
-  const sessionID = socket.handshake.auth.sessionID;
-  if (sessionID) {
-    console.log("sessionID", sessionID);
-    const session = await sessionStore.findSession(sessionID);
 
-    // Si session, va chercher les IDs et name
-    if (session) {
-      console.log("session", session);
-      socket.sessionID = sessionID;
-      socket.username = session.username;
-      socket.userID = session.userID;
-      return next();
+    if (!socket.handshake.auth) {
+        return next(new Error("invalid handshake"));
     }
-  }
+    if (socket.handshake.auth.video) {
+        console.log('player video connected');
+        socket.sessionID = 'video';
+        socket.username = 'video';
+        socket.userID = 'video';
+        socket.video = true;
+        return next();
+    }
+    // Donnée passées en ligne 25 dans test.js
+    const sessionID = socket.handshake.auth.sessionID;
+    if (sessionID) {
+        console.log("sessionID", sessionID);
+        const session = await sessionStore.findSession(sessionID);
 
-  // Si pas encore connecté, crée IDs
-  const username = socket.handshake.auth.username;
-  console.log("username", username);
-  if (!username) {
-    return next(new Error("invalid username"));
-  }
-  socket.sessionID = randomId();
-  socket.userID = randomId();
-  socket.username = username;
-  next();
+        // Si session, va chercher les IDs et name
+        if (session) {
+            console.log("session", session);
+            socket.sessionID = sessionID;
+            socket.username = session.username;
+            socket.userID = session.userID;
+            return next();
+        }
+    }
+
+    // Si pas encore connecté, crée IDs
+    const username = socket.handshake.auth.username;
+    console.log("username", username);
+    if (!username) {
+        return next(new Error("invalid username"));
+    }
+    socket.sessionID = randomId();
+    socket.userID = randomId();
+    socket.username = username;
+    next();
 });
 
 io.on("connection", async (socket) => {
-  console.log("on connection");
-  // persist session
-  await sessionStore.saveSession({
-    sessionID: socket.sessionID,
-    userID: socket.userID,
-    username: socket.username,
-    connected: true
-  });
-
-  // emit session details
-  socket.emit("session", {
-    sessionID: socket.sessionID,
-    userID: socket.userID
-  });
-
-  // join the "userID" room
-  socket.join(socket.userID);
-
-  // fetch existing users
-  const sessions = await sessionStore.findAllSessions();
-
-  console.log("all sessions", sessions);
-
-  const users = sessions.map((session) => ({
-    userID: session.userID,
-    username: session.username,
-    connected: session.connected
-  }));
-
-  socket.emit("users", users);
-
-  // notify existing users
-  socket.broadcast.emit("user connected", {
-    userID: socket.userID,
-    username: socket.username,
-    connected: true,
-    messages: []
-  });
-
-  // notify users upon disconnection
-  socket.on("disconnect", async () => {
-    const matchingSockets = await io.in(socket.userID).allSockets();
-    const isDisconnected = matchingSockets.size === 0;
-    if (isDisconnected) {
-      // notify other users
-      console.log(socket.sessionID, "disconnected");
-      socket.broadcast.emit("user disconnected", socket.userID);
-      // update the connection status of the session
-      sessionStore.saveSession({
+    console.log("on connection");
+    // persist session
+    await sessionStore.saveSession({
         sessionID: socket.sessionID,
         userID: socket.userID,
         username: socket.username,
-        connected: false
-      });
-    }
-  });
+        connected: true
+    });
+
+    // emit session details
+    socket.emit("session", {
+        sessionID: socket.sessionID,
+        userID: socket.userID
+    });
+
+    // join the "userID" room
+    socket.join(socket.userID);
+
+    // fetch existing users
+    const sessions = await sessionStore.findAllSessions();
+
+    console.log("all sessions", sessions);
+
+    const users = sessions.map((session) => ({
+        userID: session.userID,
+        username: session.username,
+        connected: session.connected
+    }));
+
+    socket.emit("users", users);
+
+    // notify existing users
+    socket.broadcast.emit("user connected", {
+        userID: socket.userID,
+        username: socket.username,
+        connected: true,
+        messages: []
+    });
+
+    // notify users upon disconnection
+    socket.on("disconnect", async () => {
+        const matchingSockets = await io.in(socket.userID).allSockets();
+        const isDisconnected = matchingSockets.size === 0;
+        if (isDisconnected) {
+            // notify other users
+            console.log(socket.sessionID, "disconnected");
+            socket.broadcast.emit("user disconnected", socket.userID);
+            // update the connection status of the session
+            sessionStore.saveSession({
+                sessionID: socket.sessionID,
+                userID: socket.userID,
+                username: socket.username,
+                connected: false
+            });
+        }
+    });
 });
 
 /*
