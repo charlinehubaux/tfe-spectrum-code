@@ -1,6 +1,6 @@
 var admin = require("firebase-admin");
 
-var serviceAccount = require("../tfe-spectrum-code-firebase-adminsdk-iz9ma-d7f7c55698.json");
+var serviceAccount = require("./firebaseToken.js");
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
