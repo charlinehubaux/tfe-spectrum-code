@@ -20,10 +20,12 @@ $(function() {
 
     socket.on('connected', (data) => {
         $connected.html(data);
+        console.log("connecté");
     });
 
     socket.on('disconnected', (data) => {
         $connected.html(data);
+        console.log("déconnecté");
     });
 
 

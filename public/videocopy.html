@@ -1,49 +1,37 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>VIDEO</title>
-  <link rel="stylesheet" href="main.css">
+  <head>
+    <meta charset="UTF-8" />
+    <title>VIDEO</title>
+    <link rel="stylesheet" href="main.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Pangolin&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="home-video-content">
+      <h1 class="bienvenue">STARTING SOON</h1>
+    </div>
 
-</head>
-<body>
+    <video class="video-player timer-player">
+      <source id="timer-video-source" src="" type="video/mp4" />
+    </video>
 
-  <h1 class='bienvenue'>BIENVENUE</h1>
+    <video class="video-player tronc-player">
+      <source id="tronc-video-source" src="" type="video/mp4" />
+    </video>
 
-  <video class="video-player timer-player">
-    <source id="timer-video-source" src="src/videos/timer.mp4" type="video/mp4"/>
-  </video>
+    <video class="video-player choix-player">
+      <source id="choix-video-source" src="" type="video/mp4" />
+    </video>
 
-  <video class ="video-player tronc-player">
-    <source id="tronc-video-source" src="src/videos/T1.mp4" type="video/mp4"/>
-  </video>
+    <img id="arbo" class="arbo" src="" alt="" />
 
-  <video class="video-player choix-player">
-    <source id="choix-video-source" src="src/videos/A1.mp4" type="video/mp4"/>
-  </video>
+    <h1 class="generique">GENERIQUE DE FIN</h1>
 
-  <style>
-    .choix-player
-    {
-      z-index : 0;
-    }
-
-    .tronc-player
-    {
-      z-index : 1;
-    }
-
-    .timer-player
-    {
-z-index : 2;
-    } 
-
-  </style>
-
-
-  <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
-  <script src="/socket.io/socket.io.js"></script>
-
-  
-</body>
+    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="https://cdn.socket.io/4.1.2/socket.io.min.js" integrity="sha384-toS6mmwu70G0fw54EGlWWeA4z3dyJ+dlXBtSURSKN4vyRFOcxd3Bzjj/AoOwY+Rg" crossorigin="anonymous"></script>
+    <script src="/assets/video.js"></script>
+  </body>
 </html>

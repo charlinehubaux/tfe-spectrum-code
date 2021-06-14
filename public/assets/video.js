@@ -1,7 +1,10 @@
 $(function () {
 
     //Variable Socket pour les commandes socket.io
-    const socket = io("https://spectrum-iad.herokuapp.com/");
+    // En local :
+    const socket = io();
+    // Avec heroku :
+    //const socket = io("https://spectrum-iad.herokuapp.com/");
 
 
     // Variables d'elements HTML
