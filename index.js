@@ -8,6 +8,8 @@ var server = require("http").createServer(app);
 var io = require("socket.io")(server);
 var port = process.env.PORT || 3000;
 var sessionStore = require("./server/sessionStore");
+var cors = require('cors');
+app.use(cors());
 
 const crypto = require("crypto");
 const randomId = () => crypto.randomBytes(8).toString("hex");

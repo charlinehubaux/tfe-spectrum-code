@@ -1,7 +1,8 @@
 $(function () {
 
     //Variable Socket pour les commandes socket.io
-    var socket = io();
+    const socket = io("https://spectrum-iad.herokuapp.com/");
+
 
     // Variables d'elements HTML
     var $bienvenue = $(".bienvenue");
