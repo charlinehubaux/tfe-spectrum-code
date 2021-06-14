@@ -5,7 +5,9 @@ var express = require("express");
 var app = express();
 var path = require("path");
 var server = require("http").createServer(app);
-var io = require("socket.io")(server);
+var io = require("socket.io")(server, {cors: {
+  origin: "*",
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE"}});
 var port = process.env.PORT || 3000;
 var sessionStore = require("./server/sessionStore");
 var cors = require('cors');
