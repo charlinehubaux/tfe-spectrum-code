@@ -13,7 +13,8 @@
     "socket.io-client": "^4.0.0"
   },
   "scripts": {
-    "start": "nodemon index.js"
+    "start": "nodemon index.js",
+    "dev": "nodemon index.js"
   },
   "devDependencies": {
     "nodemon": "^2.0.3"
