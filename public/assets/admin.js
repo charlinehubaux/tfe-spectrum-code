@@ -30,7 +30,8 @@ $(function() {
 
 
     $start.click(() => {
-        socket.emit('start');     
+        socket.emit('start');  
+        console.log('start');   
     });
 
 
