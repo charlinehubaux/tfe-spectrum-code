@@ -1,4 +1,5 @@
 class MemorySessionStore {
+
   constructor() {
     this.collection = [];
   }
