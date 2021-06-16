@@ -119,6 +119,7 @@ io.on("connection", async (socket) => {
 
     socket.on("start", () => {
       socket.broadcast.emit("start");
+      console.log('start');
     });
 
     // notify users upon disconnection
