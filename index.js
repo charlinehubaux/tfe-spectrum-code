@@ -36,7 +36,7 @@ const nbrReady = 0;
 const choix = [0, 0];
 
 // Observe si déjà une session avec ce use
-io.use(async (socket, next) => {
+/*io.use(async (socket, next) => {
 
     if (!socket.handshake.auth) {
         return next(new Error("invalid handshake"));
@@ -75,7 +75,7 @@ io.use(async (socket, next) => {
     socket.userID = randomId();
     socket.username = username;
     next();
-});
+});*/
 
 io.on("connection", async (socket) => {
     console.log("on connection");
@@ -115,6 +115,10 @@ io.on("connection", async (socket) => {
         username: socket.username,
         connected: true,
         messages: []
+    });
+
+    socket.on("start", () => {
+      socket.broadcast.emit("start");
     });
 
     // notify users upon disconnection
