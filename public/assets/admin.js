@@ -31,7 +31,7 @@ $(function() {
 
     $start.click(() => {
         socket.emit('start');  
-        //console.log('start');   
+        console.log('start');   
     });
 
 
