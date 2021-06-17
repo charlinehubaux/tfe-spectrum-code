@@ -3,37 +3,39 @@
     //Variable Socket pour les commandes socket.io
     //const URL = "http://localhost";
     
-    //const URL = "192.168.1.44:5000";
-    const socket = io({autoConnect: false });
+    const URL = "192.168.1.44:5000";
+    const socket = io(URL,{autoConnect: false });
 
-   /*
+   
     function init() {
         let users = [];
         let usernameAlreadySelected = false;
         let connected = false;
-        const sessionID = 1010;//localStorage.getItem("sessionID");
+        const sessionID = localStorage.getItem("sessionID");
+        const username = "Thomas";
         console.log("My local storage session id", sessionID);
         if (sessionID) {
-          console.log("je suis connecté");
           localStorage.removeItem("sessionID");
-          usernameAlreadySelected = true;
           // socket.auth, c'est les données échangée lors de la poignée de main initiale
-          socket.auth = { sessionID };
+          socket.auth = { sessionID, username };
           socket.connect();
         } else {
-          
+          socket.connect();
           //showUsernamePicker();
     }
 }
 
 
-    document.addEventListener("DOMContentLoaded", init);*/
-    socket.connect();
+socket.on("yeah", (data) => {
+    localStorage.setItem("sessionID", data.ID);
+    console.log("Mon nom est :", data.username);
+    console.log("Mon ID est :", data.ID);
+});
 
-    socket.on('yeah', (data) => {
-        console.log('hello');
 
-    });
+    document.addEventListener("DOMContentLoaded", init);
+
+
 
 /*
     // Variables d'elements HTML
