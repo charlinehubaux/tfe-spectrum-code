@@ -7,42 +7,21 @@
     const socket = io(URL,{autoConnect: false });
 
    
-    function init() {
-        let users = [];
-        let usernameAlreadySelected = false;
-        let connected = false;
-        const sessionID = localStorage.getItem("sessionID");
-        const username = "Thomas";
-        console.log("My local storage session id", sessionID);
-        if (sessionID) {
-          localStorage.removeItem("sessionID");
-          // socket.auth, c'est les données échangée lors de la poignée de main initiale
-          socket.auth = { sessionID, username };
-          socket.connect();
-        } else {
-          socket.connect();
-          //showUsernamePicker();
-    }
-}
-
-
-socket.on("yeah", (data) => {
-    localStorage.setItem("sessionID", data.ID);
-    console.log("Mon nom est :", data.username);
-    console.log("Mon ID est :", data.ID);
-});
-
-
-    document.addEventListener("DOMContentLoaded", init);
 
 
 
-/*
+
+
+
+
+
+
+
     // Variables d'elements HTML
-    var $buttonReady = $(".buttonReady");
-    var $titre = $(".titre");
+    var $buttonReady = $(".buttonReady"); 
+    var $usernameInput = $(".usernameInput");
     var $iAmReady = $(".iAmReady");
-    var $messages = $('.messages');
+
     var $buttonA = $(".buttonA");
     var $buttonB = $(".buttonB");
     var $question = $(".question");
@@ -52,6 +31,9 @@ socket.on("yeah", (data) => {
     var $timerRond = $('.timerRond');
     var $waiting = $('.waiting');
     var $connected = $('.connected');
+
+    // PAGES
+    var $usernameSelection = $(".home-mobile-content");
 
   //  var timer;
    // var time = 20;
@@ -69,60 +51,51 @@ socket.on("yeah", (data) => {
                     ];
 
 
-    socket.emit('connected');
-
+    //socket.emit('connected');            
     $iAmReady.hide();
     $buttonA.hide();
     $buttonB.hide();
     $question.hide();
-    $waiting.hide();
+    //$waiting.hide();
     $totalA.hide();
     $totalB.hide();
-    $timerRond.hide();
+   // $timerRond.hide();
 
     
-    
+   function showReady(){
+       $usernameInput.hide();
+       $buttonReady.hide();
+       $iAmReady.show();
+   }
 
-    // Quand on clique sur le bouton
+   function showUsernamePicker(){
+ 
+    // Quand on clique
     $buttonReady.click(() => {
-        // On emit ('le nom de la fonction ON', 'les datas à utiliser')
-        socket.emit('ready', "READY !");
-        $buttonReady.hide();
-        $titre.hide();
-        $waiting.show();
-        $connected.show
-
-        socket.on('connected', (data) => {
-            $connected.html(data);
-        });
+        var $username = $usernameInput.val();
+        if($username.length <2 || $username.length >16){
+            console.log("trop petit ou trop grand");
+        } else {
+            username = $username;
+            socket.auth = {username};
+            socket.connect();  
+        }
+        console.log($username);
+      });  
+   }
     
-        socket.on('disconnected', (data) => {
-            $connected.html(data);
-        });
 
-      document.getElementById("app").style.animationPlayState = "paused"; 
-    
-    });
-
-    
-    // Aller chercher les nouvelles données sur le serveur
-    socket.on('ready', (data) => {
-        var $newMessage = $('<span class="messageBody">').text("Une Personne est prête!");
-        $messages.append($newMessage);
-        $messages.append("<br>");
-
-        nbrReady++;
-        console.log(nbrReady);
-
-    });
-
-    socket.on('sendReady', (data)=> {
-        $connected.html("Il y a " + data + " personne(s) connectée(s)");
-    });
+   socket.on('startMovie', ()=> {
+    $usernameSelection.hide();
+   });
   
     // Afficher les boutons en fin de vidéo
     socket.on('video-is-finished', (data) => {
-        nbrQuestion = data;
+        nbrQuestion = data.question;
+        
+        console.log('timeToVote');
+
+        $usernameSelection.hide();
         $waiting.hide();
         $iAmReady.hide();
         $connected.hide();
@@ -158,10 +131,11 @@ socket.on("yeah", (data) => {
         };
 
         const TIME_LIMIT = 20;
-        let timePassed = 0;
-        let timeLeft = TIME_LIMIT;
+        let timePassed = data.passed;
+        let timeLeft = TIME_LIMIT - timePassed;
         let timerInterval = null;
         let remainingPathColor = COLOR_CODES.info.color;
+
 
         document.getElementById("app").innerHTML = `
         <div class="base-timer">
@@ -187,6 +161,12 @@ socket.on("yeah", (data) => {
         </div>
         `;
 
+        document.getElementById("base-timer-label").innerHTML = formatTime(
+            timeLeft
+            );
+        setCircleDasharray();
+        setRemainingPathColor(timeLeft);
+
         startTimer();
 
         function onTimesUp() {
@@ -195,29 +175,25 @@ socket.on("yeah", (data) => {
 
         function startTimer() {
         timerInterval = setInterval(() => {
-            timePassed = timePassed += 1;
+            timePassed += .1;
             timeLeft = TIME_LIMIT - timePassed;
             document.getElementById("base-timer-label").innerHTML = formatTime(
             timeLeft
             );
             setCircleDasharray();
-            setRemainingPathColor(timeLeft);
-
-            if (timeLeft === 0) {
+            //setRemainingPathColor(timeLeft);
+            if (timeLeft < 0.1) {
             onTimesUp();
             }
-        }, 1000);
+        }, 100);
         }
 
         function formatTime(time) {
-        const minutes = Math.floor(time / 60);
-        let seconds = time % 60;
-
+        let seconds = Math.round(time);
         if (seconds < 10) {
-            seconds = `0${seconds}`;
+            //seconds = `0${seconds}`;
         }
-
-        return `${minutes}:${seconds}`;
+        return `${seconds}`;
         }
 
         function setRemainingPathColor(timeLeft) {
@@ -240,23 +216,22 @@ socket.on("yeah", (data) => {
         }
 
         function calculateTimeFraction() {
-        const rawTimeFraction = timeLeft / TIME_LIMIT;
-        return rawTimeFraction - (1 / TIME_LIMIT) * (1 - rawTimeFraction);
+        return rawTimeFraction = timeLeft / TIME_LIMIT;
+        //return rawTimeFraction - (1 / TIME_LIMIT) * (1 - rawTimeFraction);
         }
 
         function setCircleDasharray() {
+            console.log(calculateTimeFraction());
         const circleDasharray = `${(
             calculateTimeFraction() * FULL_DASH_ARRAY
-        ).toFixed(0)} 283`;
+        ).toFixed(1)} 283`;
         document
             .getElementById("base-timer-path-remaining")
             .setAttribute("stroke-dasharray", circleDasharray);
         }
-            });
-
-
-
-
+            }
+            
+    );
 
 
 
@@ -266,7 +241,7 @@ socket.on("yeah", (data) => {
         $buttonB.hide();
         $totalA.show();
         $totalB.show();
-        $timerRond.hide();
+        //$timerRond.hide();
         $question.hide();
     }
 
@@ -309,6 +284,39 @@ socket.on("yeah", (data) => {
 
     });
 
-*/
+socket.on("connected", (data) => {
+    localStorage.setItem("sessionID", data.ID);
+   // localStorage.setItem("username", data.username);
+    myUsername = data.username;
+    console.log("Tu es bien connecté. Bienvenue ", data.username);
+    showReady();
+});
+
+// Si le serveur redémarre on recommence TOUT
+socket.on("disconnect", () => {
+    localStorage.removeItem("sessionID");
+    window.location.reload(true);
+});
+
+// INITIALIZATION ON CONNECTION
+function init() {
+    let users = [];
+    let usernameAlreadySelected = false;
+    let connected = false;
+    const sessionID = localStorage.getItem("sessionID");
+    console.log("My local storage session id", sessionID);
+    if (sessionID) {
+        localStorage.removeItem("sessionID");
+        // socket.auth, c'est les données échangée lors de la poignée de main initiale
+        socket.auth = {sessionID};
+        socket.connect();
+    } else {
+        showUsernamePicker();
+    }
+}
 
 
+
+
+
+document.addEventListener("DOMContentLoaded", init);

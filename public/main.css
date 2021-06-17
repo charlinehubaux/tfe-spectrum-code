@@ -123,6 +123,7 @@ body {
     box-sizing: border-box;
     border-radius: 140px;
     cursor: pointer;
+    z-index : 10000;
 }
 
 .buttonReady:hover {
@@ -150,6 +151,10 @@ body {
         font-size: 15vh;
     }
 
+}
+
+.usernameInput {
+    z-index : 10000000;
 }
 
 /* -------------------- WAITING -------------------- */
@@ -418,7 +423,7 @@ body {
     stroke-linecap: round;
     transform: rotate(90deg);
     transform-origin: center;
-    transition: 1s linear all;
+    transition: 0.1s linear all;
     fill-rule: nonzero;
     stroke: currentColor;
 }
