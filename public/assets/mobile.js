@@ -30,6 +30,11 @@
     document.addEventListener("DOMContentLoaded", init);*/
     socket.connect();
 
+    socket.on('yeah', (data) => {
+        console.log('hello');
+
+    });
+
 /*
     // Variables d'elements HTML
     var $buttonReady = $(".buttonReady");

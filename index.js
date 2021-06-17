@@ -85,6 +85,8 @@ console.log("hello");
 
 io.on("connection", async(socket) => {
     console.log("on connection");
+
+    socket.emit('yeah');
     /*// persist session
     await sessionStore.saveSession({
         sessionID: socket.sessionID,
