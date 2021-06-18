@@ -26,7 +26,7 @@ $(function() {
             } else {
                 liste += "<li style='color:red'"; 
             }
-            liste += "class='adminUser'>" + user.username + "</li>";
+           liste += "class='adminUser'>" + user.username + "  -  " + user.choix[0] + " - "+ user.choix[1] + " - "+ user.choix[2] + "</li>";
         });
         $ready.html(readies);
         $connected.html(USERS.length);

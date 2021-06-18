@@ -1,19 +1,10 @@
 
-
+    
     //Variable Socket pour les commandes socket.io
     //const URL = "http://localhost";
     
     const URL = "192.168.1.44:5000";
     const socket = io(URL,{autoConnect: false });
-
-   
-
-
-
-
-
-
-
 
 
 
@@ -21,6 +12,8 @@
     var $buttonReady = $(".buttonReady"); 
     var $usernameInput = $(".usernameInput");
     var $iAmReady = $(".iAmReady");
+    var $results = $('.results');
+    var $titre = $('.titre');
 
     var $buttonA = $(".buttonA");
     var $buttonB = $(".buttonB");
@@ -34,11 +27,16 @@
 
     // PAGES
     var $usernameSelection = $(".home-mobile-content");
+    var $choixPage = $('.page-choix-content');
+    var $waitingPage = $('.waiting');
+    var $creditsPage = $('.credits');
+
 
   //  var timer;
    // var time = 20;
 
     var nbrReady = 0;
+    var myIndex;
 
     var nbrQuestion = 0;
     var questions = [
@@ -59,6 +57,9 @@
     //$waiting.hide();
     $totalA.hide();
     $totalB.hide();
+    $results.hide();
+    $creditsPage.hide();
+    $waiting.hide();
    // $timerRond.hide();
 
     
@@ -78,20 +79,28 @@
         } else {
             username = $username;
             socket.auth = {username};
-            socket.connect();  
+            socket.connect();
+            $waiting.show();
+            $titre.hide();
+
         }
         console.log($username);
       });  
    }
+
+   showUsernamePicker();
+
     
 
    socket.on('startMovie', ()=> {
     $usernameSelection.hide();
+    $waiting.show();
    });
   
     // Afficher les boutons en fin de vidéo
     socket.on('video-is-finished', (data) => {
         nbrQuestion = data.question;
+        
         
         console.log('timeToVote');
 
@@ -104,9 +113,12 @@
         $buttonA.html(questions[nbrQuestion].txt_choixA);
         $buttonB.html(questions[nbrQuestion].txt_choixB);
         $question.show();
-
         $timerRond.show();
      
+        if(data.voted >= 0){
+         console.log('déjà voté');
+            quandTuVotes();
+        }
 
     ///////// Animation du timer ///////
 
@@ -221,7 +233,6 @@
         }
 
         function setCircleDasharray() {
-            console.log(calculateTimeFraction());
         const circleDasharray = `${(
             calculateTimeFraction() * FULL_DASH_ARRAY
         ).toFixed(1)} 283`;
@@ -229,7 +240,7 @@
             .getElementById("base-timer-path-remaining")
             .setAttribute("stroke-dasharray", circleDasharray);
         }
-            }
+        }
             
     );
 
@@ -281,20 +292,78 @@
         $question.hide();
         $totalA.hide();
         $totalB.hide();
-
     });
+
+
+
+    /// QUAND C'est la fin
+socket.on('FIN', (data)=>{
+
+    $waiting.hide();
+    console.log('FIN');
+    $results.show();
+    const results = data.results;
+    const choix = data.USERS[myIndex].choix;
+
+    var decisions = [   ["de désarmer le méchant","de sauver Alice"],
+                        ["d'ouvrir la porte", "de t'enfuir par la fenêtre"],
+                        ["de la supplier d'arrêter","de te défendre"]];
+    var text="";
+
+   for(var i=0; i<3;i++){
+       let choi = choix[i];
+       let result = results[i];
+       
+       if(choi ===null || choi ==="null" || choi==undefined){
+        text+="<p style='opacity:.4'> Tu n'as pas pris de décision, lâche </p><br>"; 
+       } else {
+        text+="<p style='opacity:";
+        if(choi == result){
+        text+= "1'>";    
+        } else {
+        text+= ".4'>";     
+        }
+        text+= "Tu as choisi " + decisions[i][choi] + "</p><br>";
+       }
+    $results.html(text);   
+    }
+});
+
+
+
+socket.on("credits", (data) => {
+
+    let results = data.results;
+    let tri = data.tri;
+    console.log('credits Yeah');
+    $usernameSelection.hide();
+    $choixPage.hide();
+    $waitingPage.hide();
+
+    const Remerciements = [$('.totalDecisif'),$('.totalPartiel'),$('.totalMauvais'), $('.totalNull') ];
+    tri.forEach((place, i) => {
+        place.forEach((username,j) => {
+            Remerciements[i].append("<p class='typo'>"+ username +'<p>');
+        });
+    if(place.length ==0) Remerciements[i].html('');    
+    });
+    $creditsPage.show();
+
+});
+
+
 
 socket.on("connected", (data) => {
     localStorage.setItem("sessionID", data.ID);
-   // localStorage.setItem("username", data.username);
     myUsername = data.username;
+    myIndex = data.index;
     console.log("Tu es bien connecté. Bienvenue ", data.username);
     showReady();
 });
 
+
 // Si le serveur redémarre on recommence TOUT
 socket.on("disconnect", () => {
-    localStorage.removeItem("sessionID");
     window.location.reload(true);
 });
 
@@ -314,9 +383,6 @@ function init() {
         showUsernamePicker();
     }
 }
-
-
-
 
 
 document.addEventListener("DOMContentLoaded", init);
