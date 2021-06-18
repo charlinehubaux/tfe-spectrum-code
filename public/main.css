@@ -425,7 +425,7 @@ body {
     stroke-linecap: round;
     transform: rotate(90deg);
     transform-origin: center;
-    transition: 0.1s linear all;
+    transition: 1s linear all;
     fill-rule: nonzero;
     stroke: currentColor;
 }

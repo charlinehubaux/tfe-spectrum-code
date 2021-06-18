@@ -40,11 +40,11 @@
     var nbrQuestion = 0;
     var questions = [
                     {   txt_choixA : "Désarmer l'homme",
-                        txt_choixB : "Sauver Alice" },
-                    {   txt_choixA : "Ouvrir la porte",
-                        txt_choixB : "S'enfuir par la fenêtre"},
-                    {   txt_choixA : "La supplier d'arrêter",
-                        txt_choixB : "Se défendre"}
+                        txt_choixB : "Faire confiance à Alice" },
+                    {   txt_choixA : "S'enfuir par la fenêtre",
+                        txt_choixB : "Ouvrir la porte"},
+                    {   txt_choixA : "Se défendre",
+                        txt_choixB : "La supplier d'arrêter"}
                     ];
 
 
@@ -122,7 +122,7 @@
         }
         };
 
-        const TIME_LIMIT = 20;
+        const TIME_LIMIT = 19;
         let timePassed = data.passed;
         let timeLeft = TIME_LIMIT - timePassed;
         let timerInterval = null;
@@ -159,26 +159,25 @@
         setCircleDasharray();
         setRemainingPathColor(timeLeft);
 
-        startTimer();
+        
+        function updateTimer(passed){
+            timeLeft = TIME_LIMIT - passed;
+            document.getElementById("base-timer-label").innerHTML = formatTime(
+            timeLeft
+            );
+            setCircleDasharray();
+        }
+
+        updateTimer(timePassed);
 
         function onTimesUp() {
         clearInterval(timerInterval);
         }
 
-        function startTimer() {
-        timerInterval = setInterval(() => {
-            timePassed += .1;
-            timeLeft = TIME_LIMIT - timePassed;
-            document.getElementById("base-timer-label").innerHTML = formatTime(
-            timeLeft
-            );
-            setCircleDasharray();
-            //setRemainingPathColor(timeLeft);
-            if (timeLeft < 0.1) {
-            onTimesUp();
-            }
-        }, 100);
-        }
+        socket.on('timeUpdate', (data)=> {
+            console.log(data.timePassed);
+            updateTimer(data.timePassed);
+        });
 
         function formatTime(time) {
         let seconds = Math.round(time);
@@ -208,14 +207,14 @@
         }
 
         function calculateTimeFraction() {
-        return rawTimeFraction = timeLeft / TIME_LIMIT;
+        return rawTimeFraction = (timeLeft-1) / TIME_LIMIT;
         //return rawTimeFraction - (1 / TIME_LIMIT) * (1 - rawTimeFraction);
         }
 
         function setCircleDasharray() {
         const circleDasharray = `${(
             calculateTimeFraction() * FULL_DASH_ARRAY
-        ).toFixed(1)} 283`;
+        ).toFixed(0)} 283`;
         document
             .getElementById("base-timer-path-remaining")
             .setAttribute("stroke-dasharray", circleDasharray);
@@ -285,7 +284,7 @@ socket.on('FIN', (data)=>{
     const results = data.results;
     const choix = data.USERS[myIndex].choix;
 
-    var decisions = [   ["de désarmer le méchant","de sauver Alice"],
+    var decisions = [   ["de désarmer l'homme'","de faire confiance à Alice"],
                         ["d'ouvrir la porte", "de t'enfuir par la fenêtre"],
                         ["de la supplier d'arrêter","de te défendre"]];
     var text="";

@@ -31,7 +31,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 const randomId = () => crypto.randomBytes(8).toString('hex');
 const nbrConnected = 0;
 const nbrReady = 0;
-const TIMER = 20000;
+const TIMER = 19;
 var nbreChoix = 0;
 var choix = [0, 0];
 
@@ -91,6 +91,7 @@ io.use(async (socket, next) => {
     socket.sessionID = 'video';
     socket.username = 'video';
     socket.userID = 'video';
+    socket.join('video');
     socket.video = true;
     return next();
   }
@@ -126,6 +127,7 @@ io.use(async (socket, next) => {
       socket.username = USERS[__indexID].username;
       socket.userID = sessionID;
       socket.join(socket.userID);
+      socket.join('users');
       return next();
     }
   }
@@ -144,6 +146,7 @@ io.use(async (socket, next) => {
 
     socket.index = USERS.length - 1;
     socket.join(socket.userID);
+    socket.join('users');
     console.log(USERS);
     return next();
   }
@@ -151,9 +154,7 @@ io.use(async (socket, next) => {
 
 // CONNEXION EFFECTUEE, MAINTENANT ON S'AMUSE
 io.on('connection', async (socket) => {
-  timerInterval = setInterval(() => {
-    socket.broadcast.emit('ping');
-  }, 1000);
+  
 
   socket.on('start', async () => {
     socket.broadcast.emit('startMovie');
@@ -162,9 +163,8 @@ io.on('connection', async (socket) => {
 
   // Ce qu'il fait quand le temps est fini
   const timeIsFinished = (data) => {
-    socket.to('admin').emit('updateUsers', { USERS: USERS });
-    socket.broadcast.emit('timeup');
-    socket.emit('timeup');
+    io.sockets.in('admin').emit('updateUsers', { USERS: USERS });
+    io.sockets.in('users').emit('timeup');
     clearInterval(timerInterval);
     state = 'playing';
     choix = [0, 0];
@@ -181,10 +181,19 @@ io.on('connection', async (socket) => {
       passed: 0
     });
 
-    setTimeout(timeIsFinished, TIMER);
+    //setTimeout(timeIsFinished, TIMER);
     timePassed = 0;
     timerInterval = setInterval(() => {
-      timePassed += 0.1
+      timePassed += 1;
+      socket.broadcast.emit("timeUpdate", {timePassed :timePassed});
+      if(timePassed >=TIMER) timeIsFinished();
+    }, 1000);
+
+    let timeVideo = 0;
+    setInterval(() => {
+      console.log('videoTimer');
+      timeVideo ++;
+      if(timeVideo == 19) io.sockets.in('video').emit('timeup');
     }, 100);
 
   });
@@ -252,7 +261,7 @@ io.on('connection', async (socket) => {
   }
 
   socket.on('clickVideo', ()=>{
-    socket.to("admin").emit("clickVideo");
+    io.sockets.in("admin").emit("clickVideo");
   });
 
   socket.on('FIN', () => {
@@ -277,13 +286,13 @@ io.on('connection', async (socket) => {
   socket.on('disconnect', async () => {
     const matchingSockets = await io.in(socket.userID).allSockets();
     const isDisconnected = matchingSockets.size === 0;
-    if (isDisconnected && socket.userID != 'admin') {
+    if (isDisconnected && socket.userID != 'admin' && socket.userID != "video") {
       // notify other users
       console.log(socket.userID, 'disconnected');
       console.log(USERS);
       USERS[socket.index].connected = false;
       // socket.broadcast.emit("user disconnected", socket.userID);
-      socket.to('admin').emit('updateUsers', { USERS: USERS });
+      io.sockets.in('admin').emit('updateUsers', { USERS: USERS });
     }
   });
 });
