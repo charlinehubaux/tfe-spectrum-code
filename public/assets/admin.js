@@ -14,6 +14,8 @@ $(function() {
     var $totalA = $(".totalA");
     var $totalB = $(".totalB");
 
+    $start.prop('disabled', true);
+
 
     socket.on('updateUsers', (data) => {
         const USERS = data.USERS;
@@ -26,7 +28,7 @@ $(function() {
             } else {
                 liste += "<li style='color:red'"; 
             }
-           liste += "class='adminUser'>" + user.username + "  -  " + user.choix[0] + " - "+ user.choix[1] + " - "+ user.choix[2] + "</li>";
+           liste += "class='adminUser'>" + noHack(user.username) + "  -  " + user.choix[0] + " - "+ user.choix[1] + " - "+ user.choix[2] + "</li>";
         });
         $ready.html(readies);
         $connected.html(USERS.length);
@@ -36,7 +38,15 @@ $(function() {
 
     $start.click(() => {
         socket.emit('start');  
-        console.log('start');   
+        console.log('start'); 
+        $start.prop('disabled', true);  
+        $start.html('Déjà en Lecture');
+    });
+
+    socket.on("clickVideo", ()=>{
+        console.log('clicked');    
+    $start.prop('disabled', false);
+    $start.html('START THE TFE !!');
     });
 
 /*
@@ -56,6 +66,11 @@ $(function() {
     socket.on('disconnect', (data) => {
         window.location.reload(true);
     });
+
+    function noHack(html){
+        return html.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    }
+
 
   });
  

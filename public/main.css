@@ -34,9 +34,14 @@ body {
     cursor: pointer;
 }
 
-.start:hover {
+.start:hover:enabled {
     color: #161616;
     background-color: #fafafa;
+}
+
+.start:disabled{
+color: #ddd;
+background-color : #aaa;
 }
 
 
@@ -481,7 +486,4 @@ body {
     width : 100%;
 }
 
-.credits {
-    overflow: scroll.y;
-  }
 

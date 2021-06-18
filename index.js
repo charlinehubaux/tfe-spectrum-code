@@ -251,6 +251,10 @@ io.on('connection', async (socket) => {
     socket.emit('envoi-choix', choix);
   }
 
+  socket.on('clickVideo', ()=>{
+    socket.to("admin").emit("clickVideo");
+  });
+
   socket.on('FIN', () => {
     socket.broadcast.emit('FIN', { USERS: USERS, results: results });
     console.log(USERS);

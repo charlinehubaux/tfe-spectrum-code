@@ -7,7 +7,6 @@
     const socket = io(URL,{autoConnect: false });
 
 
-
     // Variables d'elements HTML
     var $buttonReady = $(".buttonReady"); 
     var $usernameInput = $(".usernameInput");
@@ -32,7 +31,7 @@
     var $creditsPage = $('.credits');
 
 
-  //  var timer;
+   // var timer;
    // var time = 20;
 
     var nbrReady = 0;
@@ -69,26 +68,7 @@
        $iAmReady.show();
    }
 
-   function showUsernamePicker(){
- 
-    // Quand on clique
-    $buttonReady.click(() => {
-        var $username = $usernameInput.val();
-        if($username.length <2 || $username.length >16){
-            console.log("trop petit ou trop grand");
-        } else {
-            username = $username;
-            socket.auth = {username};
-            socket.connect();
-            $waiting.show();
-            $titre.hide();
 
-        }
-        console.log($username);
-      });  
-   }
-
-   showUsernamePicker();
 
     
 
@@ -343,7 +323,7 @@ socket.on("credits", (data) => {
     const Remerciements = [$('.totalDecisif'),$('.totalPartiel'),$('.totalMauvais'), $('.totalNull') ];
     tri.forEach((place, i) => {
         place.forEach((username,j) => {
-            Remerciements[i].append("<p class='typo'>"+ username +'<p>');
+            Remerciements[i].append("<p class='typo'>"+ noHack(username) +'<p>');
         });
     if(place.length ==0) Remerciements[i].html('');    
     });
@@ -380,9 +360,29 @@ function init() {
         socket.auth = {sessionID};
         socket.connect();
     } else {
-        showUsernamePicker();
+
     }
 }
 
+$(".form").submit(function(e){
+    e.preventDefault();
+    var $username = $usernameInput.val();
+        if($username.length <2 || $username.length >16){
+            console.log("trop petit ou trop grand");
+        } else {
+            username = $username;
+            socket.auth = {username};
+            socket.connect();
+            $waiting.show();
+            $titre.hide();
+
+        }
+        console.log($username);
+  });
+
 
 document.addEventListener("DOMContentLoaded", init);
+
+function noHack(html){
+    return html.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
