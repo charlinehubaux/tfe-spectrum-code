@@ -147,7 +147,6 @@ io.on('connection', async (socket) => {
     io.sockets.in('users').emit('timeup');
     clearInterval(timerInterval);
     state = 'playing';
-    choix = [0, 0];
     nbreChoix++;
   }
 
@@ -161,6 +160,7 @@ io.on('connection', async (socket) => {
       passed: 0
     });
 
+    choix = [0, 0];
     //setTimeout(timeIsFinished, TIMER);
     timePassed = 0;
     socket.broadcast.emit("timeUpdate", {timePassed :timePassed});
@@ -173,7 +173,7 @@ io.on('connection', async (socket) => {
     setTimeout(() => {
       io.sockets.in('video').emit('envoi-choix', choix);
       io.sockets.in('video').emit('timeup');
-    }, 19500);
+    }, 19000);
 
   });
 

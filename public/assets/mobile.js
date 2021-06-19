@@ -260,8 +260,8 @@ socket.on('FIN', (data) => {
     const choix = data.USERS[myIndex].choix;
 
     var decisions = [["de désarmer l'homme", "de faire confiance à Alice"],
-    ["d'ouvrir la porte", "de t'enfuir par la fenêtre"],
-    ["de la supplier d'arrêter", "de te défendre"]];
+    ["de t'enfuir par la fenêtre","d'ouvrir la porte"],
+    ["de te défendre","de la supplier d'arrêter"]];
     var text = "";
 
     for (var i = 0; i < 3; i++) {
