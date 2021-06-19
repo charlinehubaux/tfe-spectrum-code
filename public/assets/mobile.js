@@ -1,9 +1,9 @@
 
 
 //Variable Socket pour les commandes socket.io
-//const URL = "http://localhost";
+const URL = "http://localhost";
 
-const URL = "192.168.1.44:5000";
+//const URL = "192.168.1.44:5000";
 const socket = io(URL, { autoConnect: false });
 
 
