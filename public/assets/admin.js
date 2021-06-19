@@ -49,6 +49,17 @@ $(function() {
     $start.html('START THE TFE !!');
     });
 
+    socket.on('videoDisconnected', () => {
+        console.log('caca');
+        window.location.reload(true);
+    });
+
+    socket.on('startMovie', () =>{
+        console.log('already in Play');
+        $start.prop('disabled', true);  
+        $start.html('Déjà en Lecture');
+    });
+
 /*
 
 
@@ -66,6 +77,8 @@ $(function() {
     socket.on('disconnect', (data) => {
         window.location.reload(true);
     });
+   
+
 
     function noHack(html){
         return html.replace(/</g, "&lt;").replace(/>/g, "&gt;");

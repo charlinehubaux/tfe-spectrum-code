@@ -42,6 +42,7 @@ var timePassed = 0;
 var timerInterval;
 var triTotal = [[], [], [], []];
 var results = [];
+var videoClicked = false;
 
 /*var USERS = [
   {
@@ -183,18 +184,14 @@ io.on('connection', async (socket) => {
 
     //setTimeout(timeIsFinished, TIMER);
     timePassed = 0;
+    socket.broadcast.emit("timeUpdate", {timePassed :timePassed});
     timerInterval = setInterval(() => {
       timePassed += 1;
       socket.broadcast.emit("timeUpdate", {timePassed :timePassed});
       if(timePassed >=TIMER) timeIsFinished();
     }, 1000);
 
-    let timeVideo = 0;
-    setInterval(() => {
-      console.log('videoTimer');
-      timeVideo ++;
-      if(timeVideo == 19) io.sockets.in('video').emit('timeup');
-    }, 100);
+    setTimeout(() => {io.sockets.in('video').emit('timeup');}, 1900);
 
   });
 
@@ -210,7 +207,7 @@ io.on('connection', async (socket) => {
 
   socket.on('credits', (data) => {
     console.log('credits Rolling');
-
+    state = "credits";
     results = data.results;
 
     let userIndex = 0;
@@ -258,13 +255,19 @@ io.on('connection', async (socket) => {
       voted: USERS[socket.index].choix[nbreChoix],
     });
     socket.emit('envoi-choix', choix);
+  } else if(state=="credits"){
+    socket.emit("credits", {tri:triTotal, results:results});
+  } else if(state =="fin"){
+    socket.emit('FIN', { USERS: USERS, results: results, index : socket.index });
   }
 
   socket.on('clickVideo', ()=>{
     io.sockets.in("admin").emit("clickVideo");
+    videoClicked = true;
   });
 
   socket.on('FIN', () => {
+    state="fin";
     socket.broadcast.emit('FIN', { USERS: USERS, results: results });
     console.log(USERS);
   });
@@ -278,6 +281,7 @@ io.on('connection', async (socket) => {
   // UPDATE la liste sur l'admin
   if (socket.admin) {
     socket.emit('updateUsers', { USERS: USERS });
+    if(videoClicked && state!="playing") io.sockets.in("admin").emit("clickVideo");
   } else {
     socket.in('admin').emit('updateUsers', { USERS: USERS });
   }
@@ -293,6 +297,9 @@ io.on('connection', async (socket) => {
       USERS[socket.index].connected = false;
       // socket.broadcast.emit("user disconnected", socket.userID);
       io.sockets.in('admin').emit('updateUsers', { USERS: USERS });
+    } else if(socket.userID == "video"){
+      io.sockets.in('admin').emit('videoDisconnected');
+      videoClicked = false;
     }
   });
 });

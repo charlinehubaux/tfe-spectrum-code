@@ -396,6 +396,10 @@ body {
     justify-content: center;
 }
 
+
+
+
+
 @media all and (min-width: 600px) {
    .base-timer {
         padding-left: 2vh;
@@ -425,21 +429,23 @@ body {
     stroke-linecap: round;
     transform: rotate(90deg);
     transform-origin: center;
-    transition: 1s linear all;
+    transition: all 1s linear;
+    /*transition: color 3s linear ;*/
     fill-rule: nonzero;
     stroke: currentColor;
 }
   
 .base-timer__path-remaining.green {
     color: #fafafa;
+
 }
   
 .base-timer__path-remaining.orange {
-    color: #fafafa;
+    color: orange;
 }
   
 .base-timer__path-remaining.red {
-    color: #fafafa;
+    color: red;
 }
   
 .base-timer__label {
