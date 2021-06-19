@@ -44,41 +44,24 @@ var triTotal = [[], [], [], []];
 var results = [];
 var videoClicked = false;
 
-/*var USERS = [
-  {
-    id: '4545634163',
-    username: 'Thomas',
-    choix: [1, 1, 0],
-    connected: true
-  },
-  {
-    id: '45446453',
-    username: 'Cha',
-    choix: [0, 1, 1],
-    connected: true
-  },
-  {
-    id: '4548654132163',
-    username: 'Yeah',
-    choix: [0, 1, 0],
-    connected: true
-  },  {
-    id: '4545634163',
-    username: 'Prout',
-    choix: [1, 0, 0],
-    connected: true
-  },
-  {
-    id: '45446453',
-    username: 'Hello',
-    choix: [1, 0, 1],
-    connected: true
-  }
-];*/
 
+function createUser(socket, username){
+  socket.username = username;
+  socket.sessionID = randomId();
+  socket.userID = socket.sessionID;
+  USERS.push({
+    ID: socket.sessionID,
+    username: socket.username,
+    connected: true,
+    choix: [],
+  });
 
-
-
+  socket.index = USERS.length - 1;
+  socket.join(socket.userID);
+  socket.join('users');
+  console.log(USERS);
+  return true;
+}
 
 
 // Observe si déjà une session avec ce use
@@ -130,33 +113,29 @@ io.use(async (socket, next) => {
       socket.join(socket.userID);
       socket.join('users');
       return next();
-    }
+    } else {
+      socket.error = true;
+      return next();
+    } 
   }
 
   // Si le user existe pas, on le créé et l'ajoute à la db locale
-  if (!sessionID) {
-    socket.username = socket.handshake.auth.username;
-    socket.sessionID = randomId();
-    socket.userID = socket.sessionID;
-    USERS.push({
-      ID: socket.sessionID,
-      username: socket.username,
-      connected: true,
-      choix: [],
-    });
-
-    socket.index = USERS.length - 1;
-    socket.join(socket.userID);
-    socket.join('users');
-    console.log(USERS);
-    return next();
+  else {
+    if (createUser(socket, socket.handshake.auth.username)) return next();
   }
 });
+
+/*io.on('connection', async (socket) => {
+  if(ERROR){
+    console.log('error');
+    socket.emit('error');
+  }
+});*/
 
 // CONNEXION EFFECTUEE, MAINTENANT ON S'AMUSE
 io.on('connection', async (socket) => {
   
-
+ 
   socket.on('start', async () => {
     socket.broadcast.emit('startMovie');
     state = 'playing';
@@ -244,7 +223,17 @@ io.on('connection', async (socket) => {
     socket.broadcast.emit("credits", {tri:triTotal, results:results});
   });
 
+  if(socket.error){
+    socket.emit('error');
+    socket.disconnect();
+    socket.error = false;
+  } else {
 
+  socket.emit('connected', {
+    ID: socket.sessionID,
+    username: socket.username,
+    index: socket.index
+  });
 
   if (state == 'playing') {
     socket.emit('startMovie');
@@ -260,6 +249,8 @@ io.on('connection', async (socket) => {
   } else if(state =="fin"){
     socket.emit('FIN', { USERS: USERS, results: results, index : socket.index });
   }
+      
+}
 
   socket.on('clickVideo', ()=>{
     io.sockets.in("admin").emit("clickVideo");
@@ -272,11 +263,6 @@ io.on('connection', async (socket) => {
     console.log(USERS);
   });
 
-  socket.emit('connected', {
-    ID: socket.sessionID,
-    username: socket.username,
-    index: socket.index,
-  });
 
   // UPDATE la liste sur l'admin
   if (socket.admin) {

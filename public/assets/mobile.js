@@ -7,37 +7,33 @@ const URL = window.location.hostname;
 const socket = io(URL, { autoConnect: false });
 
 
-// Variables d'elements HTML
-var $buttonReady = $(".buttonReady");
+// Variables Page Username
+var $usernameSelection = $(".home-mobile-content");
 var $usernameInput = $(".usernameInput");
-var $iAmReady = $(".iAmReady");
-var $results = $('.results');
-var $titre = $('.titre');
+var $buttonReady = $(".buttonReady");
 var $minmax = $(".minMax");
 
+// Variables Page Waiting
+var $waitingPage = $('.waiting');
+var $iAmReady = $(".iAmReady");
+
+// Variables Page Choix
+var $choixPage = $('.page-choix-content');
 var $buttonA = $(".buttonA");
 var $buttonB = $(".buttonB");
 var $question = $(".question");
 var $totalA = $(".totalA");
 var $totalB = $(".totalB");
-//  var $timerTxt = $('.timer');
 var $timerRond = $('.timerRond');
-var $waiting = $('.waiting');
-var $connected = $('.connected');
 
-// PAGES
-var $usernameSelection = $(".home-mobile-content");
-var $choixPage = $('.page-choix-content');
-var $waitingPage = $('.waiting');
+// Variables Page Credits
 var $creditsPage = $('.credits');
 
+// Variables Page Results
+var $results = $('.results');
 
-// var timer;
-// var time = 20;
 
-var nbrReady = 0;
 var myIndex = -1;
-
 var nbrQuestion = 0;
 var questions = [
     {
@@ -54,55 +50,33 @@ var questions = [
     }
 ];
 
-
-//socket.emit('connected');            
-$iAmReady.hide();
-$buttonA.hide();
-$buttonB.hide();
-$question.hide();
-//$waiting.hide();
-$totalA.hide();
-$totalB.hide();
-$results.hide();
-$creditsPage.hide();
-$waiting.hide();
-$minmax.hide();
-// $timerRond.hide();
-
-
+          
 function showReady() {
-    $usernameInput.hide();
-    $buttonReady.hide();
+    $usernameSelection.hide();
+    $waitingPage.show();
     $iAmReady.show();
 }
 
-
-
-
-
 socket.on('startMovie', () => {
+    console.log('start');
     $usernameSelection.hide();
-    $waiting.show();
+    $iAmReady.hide();
+    $waitingPage.show();
+
 });
 
 // Afficher les boutons en fin de vidéo
 socket.on('video-is-finished', (data) => {
     nbrQuestion = data.question;
 
-
-    console.log('timeToVote');
-
-    $usernameSelection.hide();
-    $waiting.hide();
-    $iAmReady.hide();
-    $connected.hide();
+    $timerRond.show();
+    $waitingPage.hide();
+    $choixPage.show();
     $buttonA.show();
     $buttonB.show();
     $buttonA.html(questions[nbrQuestion].txt_choixA);
     $buttonB.html(questions[nbrQuestion].txt_choixB);
     $question.show();
-    $timerRond.show();
-
 
     if (data.voted >= 0) {
         console.log('déjà voté');
@@ -230,6 +204,7 @@ function quandTuVotes() {
     $buttonB.hide();
     $totalA.show();
     $totalB.show();
+    console.log('VOTE');
     //$timerRond.hide();
     $question.hide();
 }
@@ -263,27 +238,22 @@ socket.on('envoi-choix', (data) => {
 // Quand time is over, on retire TOUT
 socket.on('timeup', () => {
     console.log("Le temps est écoulé");
+    $choixPage.hide();
     $timerRond.hide();
-    $waiting.show();
-    $buttonA.hide();
-    $buttonB.hide();
-    $question.hide();
-    $totalA.hide();
-    $totalB.hide();
+    $waitingPage.show();
+    $iAmReady.hide();
 });
 
 
 
 /// QUAND C'est la fin
 socket.on('FIN', (data) => {
-    $usernameSelection.hide();
+
+    $waitingPage.hide();
     $creditsPage.hide();
-    $waiting.hide();
-    console.log('FIN');
     $results.show();
 
     if(myIndex ==-1) myIndex = data.index;
-    console.log(myIndex);
     const results = data.results;
     const choix = data.USERS[myIndex].choix;
 
@@ -317,9 +287,7 @@ socket.on("credits", (data) => {
 
     let results = data.results;
     let tri = data.tri;
-    console.log('credits Yeah');
-    $usernameSelection.hide();
-    $choixPage.hide();
+
     $waitingPage.hide();
 
     const Remerciements = [$('.totalDecisif'), $('.totalPartiel'), $('.totalMauvais'), $('.totalNull')];
@@ -362,7 +330,7 @@ function init() {
         socket.auth = { sessionID };
         socket.connect();
     } else {
-
+        $usernameSelection.show();
     }
 }
 
@@ -375,12 +343,17 @@ $(".form").submit(function (e) {
         username = $username;
         socket.auth = { username };
         socket.connect();
-        $waiting.show();
-        $titre.hide();
-
+        $waitingPage.show();
     }
     console.log($username);
 });
+
+socket.on('error', () =>{
+    console.log('error');
+    $usernameSelection.show();
+});
+
+
 
 
 document.addEventListener("DOMContentLoaded", init);

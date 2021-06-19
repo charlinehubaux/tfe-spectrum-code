@@ -10,39 +10,35 @@
 </head>
 <body>
 
-<div id="app" class="timerRond"></div>
 
 
 
-<div class="home-mobile-content">
+  <div id="app" class="timerRond"></div>
+
+<div class="home-mobile-content" style="display:none">
     <h1 class="titre">SPECTRUM</h1>
     <form action="" class="form">
     <input type="text" class="usernameInput" placeholder="Entrez votre nom">
     <p class="minMax">Attention, entre 2 et 16 caractères ;)</p>
-    <p class="iAmReady" style='color:white'>En attente du film</p>
     <input type="submit" class="buttonReady" value="VALIDER">
   </form>
 </div>
-
-
-<div class="connected"></div>
   
 
-<div class="page-choix-content"> 
-  
+<div class="page-choix-content" style="display:none"> 
   <ul class="grid  grid-2cols">
 
         <li>
             <div class="choix-pourcentage-1">
               <button class="buttonA">Choix A</button>
-              <div class="totalA"></div>   
+              <div class="totalA" style="display:none"></div>   
             </div>
         </li>
 
         <li>
             <div class="choix-pourcentage-2">
             <button class="buttonB">Choix B</button>
-            <div class="totalB"></div>
+            <div class="totalB" style="display:none"></div>
             </div>
         </li>
 
@@ -52,22 +48,23 @@
   
 
 
-<div class="waiting">
+<div class="waiting" style="display:none">
   <div class="bg"></div>
   <div class="loader">
     <span class="loader__inner"></span>
     <span class="loader__inner"></span>
   </div>
+  <p class="iAmReady" style='color:white; display:none'>En attente du film</p>
 </div>
 
-<div class="credits typo">
+<div class="credits typo" style="display:none">
   <div class="totalDecisif"><h2>Félicitations pour vos choix décisifs</h2></div>
   <div class="totalPartiel"><h2>Merci pour vos choix</h2></div>
   <div class="totalMauvais"><h2>La note de participation</h2></div>
   <div class="totalNull"><h2>Vous êtes là ?</h2></div>
 </div>
 
-<div class ="results"></div>
+<div class ="results" style="display:none"></div>
 
 
 
