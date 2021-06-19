@@ -232,8 +232,8 @@ socket.on('envoi-choix', (data) => {
     console.log('choix A : ' + choixA);
     console.log('choix B : ' + choixB);
 
-    $totalA.html('choix A : ' + Math.round(choixA) + "%");
-    $totalB.html('choix B : ' + Math.round(choixB) + "%");
+    $totalA.html(questions[nbrQuestion].txt_choixA + ' : ' + Math.round(choixA) + "%");
+    $totalB.html(questions[nbrQuestion].txt_choixB + ' : ' + Math.round(choixB) + "%");
 });
 
 
