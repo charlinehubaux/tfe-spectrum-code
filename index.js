@@ -170,7 +170,10 @@ io.on('connection', async (socket) => {
       if(timePassed >=TIMER) timeIsFinished();
     }, 1000);
 
-    setTimeout(() => {io.sockets.in('video').emit('timeup');}, 1900);
+    setTimeout(() => {
+      io.sockets.in('video').emit('envoi-choix', choix);
+      io.sockets.in('video').emit('timeup');
+    }, 19500);
 
   });
 
@@ -179,8 +182,8 @@ io.on('connection', async (socket) => {
     choix[selection]++;
     USERS[socket.index].choix[nbreChoix] = selection;
     socket.voted = true;
-    socket.broadcast.emit('envoi-choix', choix);
-    socket.emit('envoi-choix', choix);
+    io.sockets.in('users').emit('envoi-choix', choix);
+
     console.log(choix);
   });
 

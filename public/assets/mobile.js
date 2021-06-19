@@ -1,9 +1,9 @@
 
 
 //Variable Socket pour les commandes socket.io
-const URL = window.location.hostname;
+//const URL = window.location.hostname;
 
-//const URL = "192.168.1.44:5000";
+const URL = "192.168.1.44:5000";
 const socket = io(URL, { autoConnect: false });
 
 
@@ -76,6 +76,8 @@ socket.on('video-is-finished', (data) => {
     $buttonB.show();
     $buttonA.html(questions[nbrQuestion].txt_choixA);
     $buttonB.html(questions[nbrQuestion].txt_choixB);
+    $totalA.hide();
+    $totalB.hide();
     $question.show();
 
     if (data.voted >= 0) {
