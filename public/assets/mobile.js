@@ -50,7 +50,7 @@ var questions = [
     }
 ];
 
-          
+
 function showReady() {
     $usernameSelection.hide();
     $waitingPage.show();
@@ -67,6 +67,8 @@ socket.on('startMovie', () => {
 
 // Afficher les boutons en fin de vidéo
 socket.on('video-is-finished', (data) => {
+    console.log('caca');
+
     nbrQuestion = data.question;
 
     $timerRond.show();
@@ -79,6 +81,7 @@ socket.on('video-is-finished', (data) => {
     $totalA.hide();
     $totalB.hide();
     $question.show();
+    $usernameSelection.hide();
 
     if (data.voted >= 0) {
         console.log('déjà voté');
@@ -114,29 +117,6 @@ socket.on('video-is-finished', (data) => {
     let remainingPathColor = COLOR_CODES.info.color;
 
 
-    document.getElementById("app").innerHTML = `
-        <div class="base-timer">
-        <svg class="base-timer__svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-            <g class="base-timer__circle">
-            <circle class="base-timer__path-elapsed" cx="50" cy="50" r="45"></circle>
-            <path
-                id="base-timer-path-remaining"
-                stroke-dasharray="283"
-                class="base-timer__path-remaining"
-                d="
-                M 50, 50
-                m -45, 0
-                a 45,45 0 1,0 90,0
-                a 45,45 0 1,0 -90,0
-                "
-            ></path>
-            </g>
-        </svg>
-        <span id="base-timer-label" class="base-timer__label">${formatTime(20)}</span>
-        </div>
-        `;
-
-
     function updateTimer(passed) {
         timeLeft = TIME_LIMIT - passed;
         timePassed = passed;
@@ -157,15 +137,16 @@ socket.on('video-is-finished', (data) => {
 
     function formatTime(time) {
         let seconds = Math.round(time);
-        if (seconds < 10) {
-            //seconds = `0${seconds}`;
-        }
         return `${seconds}`;
     }
 
     function setRemainingPathColor(timeLeft) {
         const { alert, warning, info } = COLOR_CODES;
-        if (timeLeft <= alert.threshold) {
+        if (timeLeft > warning.threshold) {
+            document
+                .getElementById("base-timer-path-remaining")
+                .classList.remove(alert.color);
+        } else if (timeLeft <= alert.threshold) {
             document
                 .getElementById("base-timer-path-remaining")
                 .classList.remove(warning.color);
@@ -194,9 +175,7 @@ socket.on('video-is-finished', (data) => {
             .getElementById("base-timer-path-remaining")
             .setAttribute("stroke-dasharray", circleDasharray);
     }
-}
-
-);
+});
 
 
 
@@ -232,8 +211,16 @@ socket.on('envoi-choix', (data) => {
     console.log('choix A : ' + choixA);
     console.log('choix B : ' + choixB);
 
-    $totalA.html(questions[nbrQuestion].txt_choixA + ' : ' + Math.round(choixA) + "%");
-    $totalB.html(questions[nbrQuestion].txt_choixB + ' : ' + Math.round(choixB) + "%");
+    if (choixA > choixB) {
+        $totalA.html(questions[nbrQuestion].txt_choixA + ' <br> <span class="totalHigh">' + Math.round(choixA) + "% </span>");
+        $totalB.html(questions[nbrQuestion].txt_choixB + ' <br> ' + Math.round(choixB) + "%");
+    } else if (choixB > choixA) {
+        $totalA.html(questions[nbrQuestion].txt_choixA + ' <br> ' + Math.round(choixA) + "%");
+        $totalB.html(questions[nbrQuestion].txt_choixB + ' <br> <span class="totalHigh">' + Math.round(choixB) + "% </span>");
+    } else {
+        $totalA.html(questions[nbrQuestion].txt_choixA + ' <br> ' + Math.round(choixA) + "%");
+        $totalB.html(questions[nbrQuestion].txt_choixB + ' <br> ' + Math.round(choixB) + "%");
+    }
 });
 
 
@@ -244,6 +231,8 @@ socket.on('timeup', () => {
     $timerRond.hide();
     $waitingPage.show();
     $iAmReady.hide();
+    document.getElementById("base-timer-path-remaining").setAttribute("stroke-dasharray", 283);
+    document.getElementById("base-timer-path-remaining").classList.remove('red');
 });
 
 
@@ -255,13 +244,13 @@ socket.on('FIN', (data) => {
     $creditsPage.hide();
     $results.show();
 
-    if(myIndex ==-1) myIndex = data.index;
+    if (myIndex == -1) myIndex = data.index;
     const results = data.results;
     const choix = data.USERS[myIndex].choix;
 
     var decisions = [["de désarmer l'homme", "de faire confiance à Alice"],
-    ["de t'enfuir par la fenêtre","d'ouvrir la porte"],
-    ["de te défendre","de la supplier d'arrêter"]];
+    ["de t'enfuir par la fenêtre", "d'ouvrir la porte"],
+    ["de te défendre", "de la supplier d'arrêter"]];
     var text = "";
 
     for (var i = 0; i < 3; i++) {
@@ -269,9 +258,9 @@ socket.on('FIN', (data) => {
         let result = results[i];
 
         if (choi === null || choi === "null" || choi == undefined) {
-            text += "<p style='opacity:.4'> Tu n'as pas pris de décision, lâche </p><br>";
+            text += "<p class='typo' style='opacity:.4'> Tu n'as pas pris de décision, lâche </p><br>";
         } else {
-            text += "<p style='opacity:";
+            text += "<p class='typo' style='opacity:";
             if (choi == result) {
                 text += "1'>";
             } else {
@@ -293,13 +282,17 @@ socket.on("credits", (data) => {
     $waitingPage.hide();
 
     const Remerciements = [$('.totalDecisif'), $('.totalPartiel'), $('.totalMauvais'), $('.totalNull')];
+    const $titles = [$('.totalDecisifTitle'), $('.totalPartielTitle'), $('.totalMauvaisTitle'), $('.totalNullTitle')];
     tri.forEach((place, i) => {
         place.forEach((username, j) => {
-            Remerciements[i].append("<p class='typo'>" + noHack(username) + '<p>');
+            Remerciements[i].append("<p class='typo'>" + noHack(username) + '</p>');
         });
-        if (place.length == 0) Remerciements[i].html('');
+        if (place.length == 0) $titles[i].hide();
     });
     $creditsPage.show();
+
+    $creditsCont = $('.creditsCont');
+    $creditsCont.css({ scrollTop: $creditsCont.height() });
 
 });
 
@@ -311,6 +304,7 @@ socket.on("connected", (data) => {
     myIndex = data.index;
     console.log("Tu es bien connecté. Bienvenue ", data.username);
     showReady();
+
 });
 
 
@@ -333,14 +327,19 @@ function init() {
         socket.connect();
     } else {
         $usernameSelection.show();
+
+        //caca({index : 0, results:[1,0,0], USERS:[{choix:[0,0,0]}] });
+        //caca({results:[1,0,1],tri:[[],["Patrick Bruel","Henry","Générique","Dirk Desmadryl","Fabien Olicard","Pignon de Pin","poijonjkgvbxck","WWWWWWWWWWWWWWWW","DownToEarth0609","Pumba","Phillipe Catherine"],["Thomas","Ta mère","Christian Clavier"],["Alain","Nathan Herrman", "Lilo et Stitch"]]});
     }
+
+
 }
 
 $(".form").submit(function (e) {
     e.preventDefault();
     var $username = $usernameInput.val();
     if ($username.length < 2 || $username.length > 16) {
-        $minmax.show();
+        $minmax.css({ opacity: .5 });
     } else {
         username = $username;
         socket.auth = { username };
@@ -350,7 +349,7 @@ $(".form").submit(function (e) {
     console.log($username);
 });
 
-socket.on('error', () =>{
+socket.on('error', () => {
     console.log('error');
     $usernameSelection.show();
 });

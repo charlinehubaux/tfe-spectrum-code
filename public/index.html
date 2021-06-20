@@ -1,70 +1,91 @@
 <!doctype html>
 <html lang="fr">
+
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MOBILE</title>
   <link rel="stylesheet" href="main.css">
-  <link href="https://fonts.googleapis.com/css2?family=Pangolin&display=swap" rel="stylesheet"> 
+  <link href="https://fonts.googleapis.com/css2?family=Pangolin&display=swap" rel="stylesheet">
 
- 
+
 </head>
+
 <body>
 
 
 
-
-  <div id="app" class="timerRond"></div>
-
-<div class="home-mobile-content" style="display:none">
-    <h1 class="titre">SPECTRUM</h1>
+  <div class="home-mobile-content" style="display:none">
+    <div class="logo"></div>
+    <p class="minMax typo">Attention, entre 2 et 16 caractères ;)</p>
     <form action="" class="form">
-    <input type="text" class="usernameInput" placeholder="Entrez votre nom">
-    <p class="minMax" style="display:none">Attention, entre 2 et 16 caractères ;)</p>
-    <input type="submit" class="buttonReady" value="VALIDER">
-  </form>
-</div>
-  
+      <input type="text" class="usernameInput" placeholder="Entrez votre nom">
+      <input type="submit" class="buttonReady button" value="VALIDER">
+    </form>
+  </div>
 
-<div class="page-choix-content" style="display:none"> 
-  <ul class="grid  grid-2cols">
 
-        <li>
-            <div class="choix-pourcentage-1">
-              <button class="buttonA">Choix A</button>
-              <div class="totalA" style="display:none"></div>   
-            </div>
-        </li>
+  <div class="page-choix-content" style="display:none">
 
-        <li>
-            <div class="choix-pourcentage-2">
-            <button class="buttonB">Choix B</button>
-            <div class="totalB" style="display:none"></div>
-            </div>
-        </li>
+    <div class="base-timer">
+      <svg class="base-timer__svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <g class="base-timer__circle">
+          <circle class="base-timer__path-elapsed" cx="50" cy="50" r="45"></circle>
+          <path id="base-timer-path-remaining" stroke-dasharray="283" class="base-timer__path-remaining" d="
+            M 50, 50
+            m -45, 0
+            a 45,45 0 1,0 90,0
+            a 45,45 0 1,0 -90,0
+            "></path>
+        </g>
+      </svg>
+      <span id="base-timer-label" class="base-timer__label">20</span>
+    </div>
+
+    <ul class="choixContainer">
+
+      <li class="choixButton">
+        <button class="buttonA button">Choix A</button>
+        <div class="totalA total typo" style="display:none"></div>
+      </li>
+
+      <li class="choixButton">
+        <button class="buttonB button">Choix B</button>
+        <div class="totalB total typo" style="display:none"></div>
+      </li>
 
     </ul>
 
-</div> 
-  
-
-
-<div class="waiting" style="display:none">
-  <div class="bg"></div>
-  <div class="loader">
-    <span class="loader__inner"></span>
-    <span class="loader__inner"></span>
   </div>
-  <p class="iAmReady" style='color:white; display:none'>En attente du film</p>
-</div>
 
-<div class="credits typo" style="display:none">
-  <div class="totalDecisif"><h2>Félicitations pour vos choix décisifs</h2></div>
-  <div class="totalPartiel"><h2>Merci pour vos choix</h2></div>
-  <div class="totalMauvais"><h2>La note de participation</h2></div>
-  <div class="totalNull"><h2>Vous êtes là ?</h2></div>
-</div>
 
-<div class ="results" style="display:none"></div>
+
+  <div class="waiting" style="display:none">
+    <div class="loader">
+      <span class="loader__inner"></span>
+      <span class="loader__inner"></span>
+    </div>
+    <p class="iAmReady typo" style='color:white; display:none'>En attente du film</p>
+  </div>
+
+  <div class="credits typo" style="display:none">
+    <div class="creditsCont" >
+      <h2 class="totalDecisifTitle">Félicitations pour vos choix décisifs</h2>
+      <div class="totalDecisif">
+      </div>
+      <h2 class="totalPartielTitle">Merci pour vos choix</h2>
+      <div class="totalPartiel">
+      </div>
+      <h2 class="totalMauvaisTitle">La note de participation</h2>
+      <div class="totalMauvais">
+      </div>
+      <h2 class="totalNullTitle">Vous êtes là ?</h2>
+      <div class="totalNull">
+      </div>
+    </div>
+  </div>
+
+  <div class="results" style="display:none"></div>
 
 
 
@@ -73,7 +94,8 @@
   <script src="/socket.io/socket.io.js"></script>
   <script src="assets/mobile.js"></script>
 
-  
-  
+
+
 </body>
+
 </html>

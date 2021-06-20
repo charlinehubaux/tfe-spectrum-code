@@ -1,10 +1,29 @@
-body {
+/*
+* Prefixed by https://autoprefixer.github.io
+* PostCSS: v7.0.29,
+* Autoprefixer: v9.7.6
+* Browsers: last 10 version
+*/
+
+html, body {
     padding: 0;
-    margin :0;
-    background-image: url(../src/Wall.jpg);
-    background-repeat: no-repeat; 
-    background-size: cover;   
-    background-color: rgb(5, 5, 5);                  
+    margin: 0;
+    height: 100%;
+    width: 100%;
+}
+
+body {
+    background: rgb(5, 5, 5) url(../src/Wall.jpg);
+    background-attachment: fixed;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: min(max(100%, 700px), 1200px);
+}
+
+ul, li {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
 }
 
 /* -------------------- ADMIN -------------------- */
@@ -13,483 +32,494 @@ body {
     color: #fafafa;
     font-family: "Pangolin";
     font-size: 2.5vh;
-    padding-top: 5vh;
     width: 100%;
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: nowrap;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -ms-flex-wrap: nowrap;
+        flex-wrap: nowrap;
 }
 
-.start {
+.typo:hover {
+    text-shadow:-2px 0px #00f, 2px 0px  #f00;
+}
+
+
+.start, .button {
     font-family: "Pangolin";
-    font-size: 2vh;
+    font-size: 1rem;
     color: #fafafa;
     background-color: #2b2b2b00;
-    padding: 2vh;
+    padding: .75rem;
     border: 3px solid;
-    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+            box-sizing: border-box;
     border-radius: 140px;
     cursor: pointer;
+    -webkit-transition: all .25s linear;
+    -o-transition: all .25s linear;
+    transition: all .25s linear;
 }
 
-.start:hover:enabled {
+.start:hover:enabled, .button:hover {
     color: #161616;
     background-color: #fafafa;
+    -webkit-transition: all .2s linear;
+    -o-transition: all .2s linear;
+    transition: all .2s linear;
 }
 
-.start:disabled{
-color: #ddd;
-background-color : #aaa;
+.start:disabled {
+    color: #ddd;
+    background-color: #aaa;
 }
-
 
 /* -------------------- VIDÉOS -------------------- */
 
-
-.video-player{
-    padding :0;
-    margin : 0;
-    display : block;
+.video-player {
+    padding: 0;
+    margin: 0;
+    display: block;
     position: absolute;
-    top:0;
-    left:0;
-    width : 100vw;
-    height : 100vh;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
 }
 
+/* -------------------- HOME -------------------- */
 
-/* -------------------- HOME VIDÉO -------------------- */
+.logo {
+    background: url("src/logo.png");
+    background-position: center center;
+    background-size : contain;
+    --width: min(95vw, 600px);
+    --ratio : calc(1200/250);
 
+    width : var(--width);
+    height : calc(var(--width) / var(--ratio));
 
-.home-video-content {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: nowrap;
 }
 
-.bienvenue {
-    padding-top: 30vh;
-    font-family: "Pangolin";
-    font-size: 5vh;
-    font-weight: 300;
-    color: #fafafa;
-}
-
-@media all and (min-width: 400px) {
-    .bienvenue {
-        font-size: 6vh;
-    }    
-}
-
-@media all and (min-width: 650px) {
-  .bienvenue {
-      font-size: 9vh;
-  }
-}
-
-@media all and (min-width: 1200px) {
-    .bienvenue {
-        font-size: 15vh;
-    }
-}
-
-
-/* -------------------- HOME MOBILE -------------------- */
+/* ------- USERNAME PICKER ----------*/
 
 .home-mobile-content {
-    width: 100%;
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: nowrap;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    width: 100%;
+    max-width: 500px;
+    height: 100%;
+    margin: 0 auto;
+    padding: 0;
 }
 
 .titre {
-    padding-top: 27vh;
-    font-size: 7vh;
+    margin-bottom: 0rem;
+    margin-top: -5rem;
+    font-size: min(18vw, 90px);
     font-family: "Pangolin";
     font-weight: 300;
     color: #fafafa;
 }
 
-.buttonReady {
-    font-family: "Pangolin";
-    font-size: 2.8vh;
-    color: #fafafa;
-    background-color: #2b2b2b00;
-    padding: 2vh;
-    border: 4px solid;
-    box-sizing: border-box;
-    border-radius: 140px;
-    cursor: pointer;
-    z-index : 10000;
+.minMax {
+    font-size: 1rem;
+    opacity: 0;
+    -webkit-transition: opacity .25s ease-in-out;
+    -o-transition: opacity .25s ease-in-out;
+    transition: opacity .25s ease-in-out;
+    pointer-events: none;
 }
 
-.buttonReady:hover {
-    color: #161616;
-    background-color: #fafafa;
-}
-
-
-@media all and (min-width: 320px) {
-    .titre {
-        font-size: 7.7vh;
-    }
-}
-
-
-@media all and (min-width: 900px) {
-    .buttonReady {
-        border: 2.8px solid;
-    }
-}
-
-
-@media all and (min-width: 1200px) {
-    .titre {
-        font-size: 15vh;
-    }
-
+.form {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    width: 75%;
 }
 
 .usernameInput {
-    z-index : 10000000;
-}
-
-/* -------------------- WAITING -------------------- */
-
-:root {
-    --size: 400px;
-    --speed: 5s;
-}
-  
-body {
-   overflow: hidden;
-      /*cursor: pointer;*/
-}
-
-.bg,
-.loader {
     width: 100%;
-    height: 100vh;
-    position: fixed;
-    top: 0;
-    left: 0;
+    height: 1.5rem;
+    border-radius: 2rem;
+    padding: .5rem;
+    color: #ddd;
+    background-color: #2b2b2b00;
+    border: 2px solid;
+    text-align: center;
+    font-size: 1.5rem;
+}
+
+.buttonReady {
+    margin-top: 1rem;
+    width: 65%;
+}
+
+/* ----------- WAITING ------------ */
+
+.waiting {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
 }
 
 .loader {
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    justify-content: center;
-    align-items: center;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
     position: absolute;
-  
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    margin: 0 auto;
 }
-  
+
 .loader__inner {
     position: absolute;
     display: block;
-    width: var(--size);
-    height: var(--size);
+    width: 60vmin;
+    height: 60vmin;
     border-radius: 50%;
-    box-shadow: 
-      0 -10px 0 0 #d3717b,
-      -7.5px 5px 0 0 #80b8ab,
-      7.5px 5px 0 0 #e2b057;
-    animation: rotate var(--speed) linear infinite;
+    -webkit-box-shadow: 0 -10px 0 0 #d3717b, -7.5px 5px 0 0 #80b8ab, 7.5px 5px 0 0 #e2b057;
+            box-shadow: 0 -10px 0 0 #d3717b, -7.5px 5px 0 0 #80b8ab, 7.5px 5px 0 0 #e2b057;
+    -webkit-animation: rotate 5s linear infinite;
+            animation: rotate 5s linear infinite;
+            z-index : 1;
 }
 
 .loader__inner:nth-child(2) {
-    box-shadow: 
-      7.5px -5px 0 0 rgba(49,27,146, .6),
-      -7.5px -5px 0 0 rgba(81,45,168, .6),
-      0 10px 0 0 rgba(103,58,183, .6);
-    animation: rotate__other var(--speed) linear infinite;
+    -webkit-box-shadow: 7.5px -5px 0 0 rgba(49, 27, 146, .6), -7.5px -5px 0 0 rgba(81, 45, 168, .6), 0 10px 0 0 rgba(103, 58, 183, .6);
+            box-shadow: 7.5px -5px 0 0 rgba(49, 27, 146, .6), -7.5px -5px 0 0 rgba(81, 45, 168, .6), 0 10px 0 0 rgba(103, 58, 183, .6);
+    -webkit-animation: rotate__other 5s linear infinite;
+            animation: rotate__other 5s linear infinite;
+            z-index : 1;
+}
+
+@-webkit-keyframes rotate {
+    50% {
+        -webkit-transform: scale(1.4) rotate(360deg);
+                transform: scale(1.4) rotate(360deg);
+    }
+    100% {
+        -webkit-transform: scale(1) rotate(720deg);
+                transform: scale(1) rotate(720deg);
+    }
 }
 
 @keyframes rotate {
     50% {
-      transform: scale(1.4) rotate(360deg);
+        -webkit-transform: scale(1.4) rotate(360deg);
+                transform: scale(1.4) rotate(360deg);
     }
     100% {
-      transform: scale(1) rotate(720deg);
+        -webkit-transform: scale(1) rotate(720deg);
+                transform: scale(1) rotate(720deg);
     }
 }
-  
+
+@-webkit-keyframes rotate__other {
+    50% {
+        -webkit-transform: scale(1.5) rotate(-360deg);
+                transform: scale(1.5) rotate(-360deg);
+    }
+    100% {
+        -webkit-transform: scale(1) rotate(-720deg);
+                transform: scale(1) rotate(-720deg);
+    }
+}
+
 @keyframes rotate__other {
     50% {
-      transform: scale(1.5) rotate(-360deg);
+        -webkit-transform: scale(1.5) rotate(-360deg);
+                transform: scale(1.5) rotate(-360deg);
     }
     100% {
-      transform: scale(1) rotate(-720deg);
+        -webkit-transform: scale(1) rotate(-720deg);
+                transform: scale(1) rotate(-720deg);
     }
 }
 
-.connected {
-    font-family: "Pangolin";
-    padding-top: 15vh;
-    font-size: 2.6vh;
-    font-weight: 300;
-    padding: 0;
-    color: #fafafa;
-    list-style: none;
+.iAmReady {
+    height: 100%;
+    font-size: min(7vmin, 2.5rem);
+    margin: 0 auto;
+    z-index : 1000000000 !important;
+}
 
-  }
+/* ----------- VOTING ------------ */
 
-  @media all and (min-width: 320px) {
-    .connected {
-        padding-top: 13vh;
-
-    } 
-  }
-
-  
-  @media all and (min-width: 1200px) {
-    .connected {
-        padding-top: 10vh;
-        font-size: 3.9vh;
-    } 
-  }
-
-/* -------------------- BOUTONS CHOIX ET POURCENTAGES -------------------- */
-
-.grid {
+.page-choix-content {
+    height: 100%;
     width: 100%;
-    padding-top: 5vh;
-    column-gap: 30vw;
-    align-content: space-around;
-    grid-template-columns: 1fr;
-}
-
-@media all and (min-width: 1200px) {
-    .grid-2cols {
-        width: 100%;
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        grid-auto-rows: auto;
-        column-gap: 30vw;
-        list-style: none;
-    }   
-}
-
-.buttonA {
-    font-family: "Pangolin";
-    font-size: 1.8vh;
-    font-weight: 300;
-    color: #fafafa;
-    background-color: #2b2b2b00;
-    padding: 2vh;
-    border: 3.2px solid;
-    box-sizing: border-box;
-    border-radius: 120px;
-    cursor: pointer;
-    list-style: none;
-}
-
-.buttonA:hover {
-    color: #161616;
-    background-color: #fafafa;
-}
-
-.totalA {
-    padding-top: 10vh; 
-    font-family: "Pangolin";
-    font-size: 2.9vh;
-    font-weight: 300;
-    color: #fafafa;
-    list-style: none;
-    
-}
-
-.buttonB {
-    font-family: "Pangolin";
-    font-size: 1.8vh;
-    font-weight: 300;
-    color: #fafafa;
-    background-color: #2b2b2b00;
-    padding: 2vh;
-    border: 3.2px solid;
-    box-sizing: border-box;
-    border-radius: 120px;
-    cursor: pointer;
-    list-style: none;
-}
-
-.buttonB:hover {
-    color: #161616;
-    background-color: #fafafa;
-}
-
-.totalB {
-    padding-top: 10vh; 
-    font-family: "Pangolin";
-    font-size: 2.9vh;
-    font-weight: 300;
-    color: #fafafa;
-    list-style: none;
-}
-
-.choix-pourcentage-1 {
-    padding-top: 4vh;
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
 }
-
-.choix-pourcentage-2 {
-    padding-top: 4vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
-
-@media all and (min-width: 650px) {
-  .buttonA {
-    font-size: 2.8vh;
-  }
-  .totalA {
-    font-size: 2.7vh;
-  } 
-  .buttonB {
-    font-size: 2.8vh;
-  }
-  .totalB {
-    font-size: 2.7vh;
-  } 
-}
-
-@media all and (min-width: 850px) {
-    .buttonA {
-        font-size: 3.8vh;
-    }
-    .totalA {
-        font-size: 3.7vh;
-    }   
-    .buttonB {
-        font-size: 3.8vh;
-    }
-    .totalB {
-        font-size: 3.7vh;
-    }   
-}
-
-/*------------------ TIMER ------------------*/
 
 .base-timer {
     font-family: "Pangolin";
     color: #fafafa;
- 
     width: 100%;
-    height: 20vh;
-    padding-top: 5vh;
-
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
-
-
-
-
-
-@media all and (min-width: 600px) {
-   .base-timer {
-        padding-left: 2vh;
-        padding-top: 15vh;
-        width: 100%;
-        height: 30vh;
-
-    }  
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
 }
 
 .base-timer__svg {
-    transform: scaleX(-1);
+    -webkit-transform: scaleX(-1);
+        -ms-transform: scaleX(-1);
+            transform: scaleX(-1);
+    width: min(300px, 70vmin);
 }
-  
+
 .base-timer__circle {
     fill: none;
     stroke: none;
 }
-  
+
 .base-timer__path-elapsed {
     stroke-width: 2px;
     stroke: rgb(29, 29, 29);
 }
-  
+
 .base-timer__path-remaining {
     stroke-width: 2px;
     stroke-linecap: round;
-    transform: rotate(90deg);
-    transform-origin: center;
+    -webkit-transform: rotate(90deg);
+        -ms-transform: rotate(90deg);
+            transform: rotate(90deg);
+    -webkit-transform-origin: center;
+        -ms-transform-origin: center;
+            transform-origin: center;
+    -webkit-transition: all 1s linear;
+    -o-transition: all 1s linear;
     transition: all 1s linear;
     /*transition: color 3s linear ;*/
     fill-rule: nonzero;
     stroke: currentColor;
 }
-  
+
 .base-timer__path-remaining.green {
     color: #fafafa;
-
 }
-  
+
 .base-timer__path-remaining.orange {
     color: orange;
 }
-  
+
 .base-timer__path-remaining.red {
     color: red;
 }
-  
+
 .base-timer__label {
     position: absolute;
+    text-align: center;
     width: 100%;
-    height: 20vh;
-    top: 5vh;
+    /*top: 5vh;*/
+    font-size: min(9vw,2rem);
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-size: 5vh;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
 }
 
-@media all and (min-width: 650px) {
-    .base-timer__label {
-        top: 15vh;
-        width: 100%;
-        height: 30vh;
-        font-size: 5vh;
-    }   
+.choixContainer {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: row;
+            flex-direction: row;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+    width: 100%;
+    margin-top: 2rem;
 }
 
-/*-------- ARBO --------*/
+.choixButton {
+    width: 100%;
+    max-width: 300px;
+    text-align: center;
+}
 
-.arbo {
+.choixButton .button, .choixButton .total {
+    width: 80%;
+    height: 6rem;
+    font-size: 1.5rem;
+}
+
+.total {
+    width: 100% !important;
+    font-weight: thin;
+}
+
+.totalHigh {
+    font-weight: bold;
+}
+
+@media all and (max-width: 500px) {
+    .choixContainer {
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+            -ms-flex-direction: column;
+                flex-direction: column;
+    }
+    .choixButton {
+        margin-top: 1rem;
+    }
+    .choixButton .button, .choixButton .total {
+        width: 95%;
+    }
+}
+
+@media all and (max-height: 500px) and (min-aspect-ratio: 14/9) {
+    .page-choix-content {
+        -webkit-box-orient: horizontal;
+        -webkit-box-direction: normal;
+            -ms-flex-direction: row;
+                flex-direction: row;
+    }
+    .choixContainer {
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+            -ms-flex-direction: column;
+                flex-direction: column;
+        margin-top: -1rem;
+    }
+    .choixButton {
+        margin-top: 1rem;
+    }
+    .choixButton .button, .choixButton .total {
+        width: 95%;
+    }
+    .base-timer__svg {
+        width: 90vh;
+    }
+
+}
+
+/* --------- GENERIQUE ---------- */
+
+.credits {
+    position: absolute;
     width: 100%;
     height: 100%;
-    padding-top: 17vh;
+    top: 0;
+    left: 0;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
 }
 
-
-/*-------- RESULTS ---------*/
-
-.results{
-
-    z-index: 100000;
-    color : white;
-    font-family: "Pangolin";
-    font-size: 2.5vh;
-    display:flex;
-    flex-direction: column;
-    text-align : center;
-    width : 100%;
+.creditsCont {
+    position: relative;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    text-align: center;
+    overflow-y: scroll;
 }
 
+.creditsCont h2 {
+    margin-top: 5rem;
+    font-size: max(2vw, 2rem);
+}
 
+.creditsCont div p {
+    font-size: max(1.5vw, 1.35rem);
+}
+
+/** -------- FIN --------------*/
+
+.results {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+    text-align: center;
+}
+
+.results .typo {
+    margin: 0;
+    padding: 1rem 0;
+    font-size: min(1.5rem, 6vw);
+}
