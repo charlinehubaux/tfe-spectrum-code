@@ -20,7 +20,7 @@
     "dev": "nodemon index.js"
   },
   "devDependencies": {
-    "nodemon": "^2.0.3"
+    "nodemon": "^2.0.20"
   },
   "keywords": [],
   "nodemonConfig": {
